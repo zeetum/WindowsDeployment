@@ -13,5 +13,5 @@ Adding Windows ISO and Applicationsto Image
 https://askme4tech.com/how-deploy-windows-10-custom-image-mdt
 
 Convert the following powershell scripts to EXE using ps2exe inside PowerShell
-changehostname.ps
-joindomain_auto.ps
+ChangeHostname.ps1
+JoinAD.ps1
