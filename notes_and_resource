@@ -4,6 +4,11 @@ https://educationwaeduau-my.sharepoint.com/personal/luke_marshall2_education_wa_
 Getting OSX Drivers
 https://twocanoes.com/knowledge-base/deploying-boot-camp-using-winpe-and-mdt/
 
+Installing MDT on Workstation Computer
+MicrosoftDeploymentToolkit_x64.msi
+adksetup.exe
+adkwinpesetup.exe
+
 Adding Windows ISO to Image
 https://askme4tech.com/how-deploy-windows-10-custom-image-mdt
 
