@@ -1,0 +1,4 @@
+# Get MAC address and rename computer
+$mac = (Get-WmiObject Win32_NetworkAdapterConfiguration | where {$_.ipenabled -EQ $true}).Macaddress
+$mac = "ms" + $mac -replace ':',''
+Rename-Computer $mac
