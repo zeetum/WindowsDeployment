@@ -12,10 +12,7 @@ https://twocanoes.com/knowledge-base/deploying-boot-camp-using-winpe-and-mdt/
 Adding Windows ISO and Applicationsto Image
 https://askme4tech.com/how-deploy-windows-10-custom-image-mdt
 
-Adding Programs
-
-Change Computer Name
+Convert the following powershell scripts to EXE using ps2exe inside PowerShell
+Install-Module -Name ps2exe -RequiredVersion 1.0.10
 changehostname.ps
-
-Joining the Domaing and adding to unassigned
 joindomain_auto.ps
