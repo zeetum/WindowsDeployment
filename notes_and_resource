@@ -6,3 +6,11 @@ https://twocanoes.com/knowledge-base/deploying-boot-camp-using-winpe-and-mdt/
 
 Adding Windows ISO to Image
 https://askme4tech.com/how-deploy-windows-10-custom-image-mdt
+
+Adding Programs
+
+Change Computer Name
+changehostname.ps
+
+Joining the Domaing and adding to unassigned
+joindomain_auto.ps
