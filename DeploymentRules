@@ -1,0 +1,30 @@
+[Settings]
+Priority=Default
+[Default]
+_SMSTSORGNAME=Test Infra
+OSInstall=YES
+OSDComputerName=PC-%SerialNumber%
+SkipApplications=NO
+SkipAppsOnUpgrade=YES
+SkipBitLocker=YES
+SkipCapture=YES
+SkipComputerName=YES
+SkipComputerBackup=YES
+SkipDeploymentType=YES
+DeploymentType=NEWCOMPUTER
+SkipDomainMembership=YES
+SkipAdminPassword=YES
+SkipLocaleSelection=YES
+KeyboardLocale=en-US
+UserLocale=en-US
+UILanguage=en-US
+SkipPackageDisplay=YES
+SkipProductKey=YES
+SkipSummary=YES
+TimeZoneName=UTC
+SkipTimeZone=YES
+SkipUserData=Yes
+SkipTaskSequence=YES
+TaskSequenceID=W10X64
+_SMSTSOrgName=Test Infra
+SkipFinalSummary=NO
