@@ -10,7 +10,7 @@ If ($NICs | Where-Object { $PSItem.NetConnectionID -eq "Ethernet" })
 }
 ElseIf ($NICs | Where-Object { $PSItem.NetConnectionID -eq "WiFi" })
 {   #Otherwise, use the Wi-Fi MAC address if it exists
-    $MACAddress = @($NICs | Where-Object { $PSItem.NetConnectionID -like "Wi-Fi" })[0].MACAddress.Replace(':','')
+    $MACAddress = @($NICs | Where-Object { $PSItem.NetConnectionID -like "WiFi" })[0].MACAddress.Replace(':','')
 }
 #endregion
 
