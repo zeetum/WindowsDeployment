@@ -6,13 +6,6 @@ Joins AD with Deployment Admin Account and dumps itself into the MDT UnAssitnede
 
 use powershell.exe -executionpolicy bypass -file .\ps2exe.ps1 -inputFile ".\ChangeHostname.ps1" -outputFile ".\ChangeHostname.exe" to create exe version of script.
 
-# Export Wireless Settings if you don't already have them
-netsh wlan export profile name=WIRELESS-5 folder=C:\
-
-# Import Wireless Settings so we can connect to the domain
-net start wlansvc
-netsh wlan add profile filename=<working_directory>\Wi-Fi-WIRELESS-5.xml
-
 #>
 
 ## Bad Pracitice but automation
