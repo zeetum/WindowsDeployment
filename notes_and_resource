@@ -11,6 +11,7 @@ https://twocanoes.com/knowledge-base/deploying-boot-camp-using-winpe-and-mdt/
 
 Adding Windows ISO and Applicationsto Image
 https://askme4tech.com/how-deploy-windows-10-custom-image-mdt
+https://www.anoopcnair.com/deploy-windows-captured-image-using-sccm-mdt/
 
 Convert the following powershell scripts to EXE using ps2exe inside PowerShell
 ChangeHostname.ps1
