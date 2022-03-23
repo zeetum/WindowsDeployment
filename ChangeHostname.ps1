@@ -14,4 +14,4 @@ ElseIf ($NICs | Where-Object { $PSItem.NetConnectionID -eq "WiFi" })
 }
 #endregion
 
-$ComputerName = "MS$MACAddress"
+Rename-Computer "MS$MACAddress"
