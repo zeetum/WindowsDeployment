@@ -4,7 +4,7 @@ Date: 11/7/19
 
 Joins AD with Deployment Admin Account and dumps itself into the MDT UnAssitnede folder so the policies apply
 
-use .\ps2exe.ps1 -inputFile ".\JoinAD.ps1" -outputFile ".\JoinAD.exe" to create exe version of script.
+use powershell.exe -executionpolicy bypass -file .\ps2exe.ps1 -inputFile ".\ChangeHostname.ps1" -outputFile ".\ChangeHostname.exe" to create exe version of script.
 
 #>
 
