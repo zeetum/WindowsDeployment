@@ -13,7 +13,7 @@ $secpasswd = ConvertTo-SecureString -AsPlainText "<Service Account Password>" -F
 $credential = New-Object System.Management.Automation.PSCredential("indigo\<Service Account>", $secpasswd)
 
 ## Join Domain
-$Join = Add-Computer -domainname "indigo.schools.internal" -OUPath "OU=MDTUnAssigned,OU=Desktops,OU=School Managed,OU=Computers,OU=E5008S01,OU=Schools,DC=indigo,DC=schools,DC=internal" -cred $credential -passthru -verbose
+$Join = Add-Computer -domainname "indigo.schools.internal" -OUPath "OU=MacBooks,OU=Notebooks,OU=School Managed,OU=Computers,OU=E5167S01,OU=Schools,DC=indigo,DC=schools,DC=internal" -cred $credential -passthru -verbose
 
 ## Reboot in 30 Seconds
 if($Join.HasSucceeded -eq $true){
