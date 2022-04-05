@@ -6,6 +6,11 @@ $IP_MASK = "255.255.248.0"
 $CCMProgramID = "CAS00235"
 $WindowsVersion = "10.0.17134" ## Is Windows 10 1803
 
+# You Can list available packages using the following commands
+# $CMObject = (New-Object -ComObject "UIResource.UIResourceMgr")
+# $CMGetAppObjects = $CMObject.GetAvailableApplications() | Select Id, PackageID, PackageName
+# echo $CMGetAppObjects
+
 ### ------------ FUNCTIONS --------------------------
 function Send-WOL {
     <# 
