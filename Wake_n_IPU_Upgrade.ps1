@@ -1,5 +1,5 @@
 #### ---------- CONFIG ------------------------------
-$OUPath = "OU=School Managed,OU=Computers,OU=E5008S01,OU=Schools,DC=indigo,DC=schools,DC=internal"
+$OUPath = "OU=I.T. Office,OU=Block H,OU=Desktops,OU=School Managed,OU=Computers,OU=E5070S01,OU=Schools,DC=indigo,DC=schools,DC=internal"
 $WOL_BC = "10.240.79.255"
 $IP_IPv4Address = "10.240.72.0"
 $IP_MASK = "255.255.248.0"
