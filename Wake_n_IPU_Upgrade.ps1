@@ -221,7 +221,7 @@ foreach ($_ in $ADComputers) {
     }
 
     try {
-        $IPUTask = (get-wmiobject -query "SELECT * FROM CCM_Program" -namespace "ROOT\ccm\ClientSDK" -ComputerName $_.DNSHostName) | Where-Object { $_.Name -like "*1809*" }
+        $IPUTask = (get-wmiobject -query "SELECT * FROM CCM_Program" -namespace "ROOT\ccm\ClientSDK" -ComputerName $_.DNSHostName) | Where-Object { $_.Name -like "*20H2*" }
         Invoke-WmiMethod -Class CCM_ProgramsManager -Namespace "root\ccm\clientsdk" -ComputerName $_.DNSHostName -Name ExecutePrograms -argumentlist $IPUTask
 
         Write-Host "Running $($CCMProgramID) Task Sequence"
