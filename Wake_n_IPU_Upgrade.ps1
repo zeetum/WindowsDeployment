@@ -51,7 +51,7 @@ Function Get-ADSIObject {
             Property to return.
         .PARAMETER PageSize
             PageSize to use for the query.
-        .PARAMETER SearchBAse
+        .PARAMETER SearchBase
             SearchBase to scope the query.
         .EXAMPLE
             Get-ADSIObject -Verbose
