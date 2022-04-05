@@ -1,4 +1,4 @@
-﻿#### ---------- CONFIG ------------------------------
+#### ---------- CONFIG ------------------------------
 $OUPath = "OU=School Managed,OU=Computers,OU=E5008S01,OU=Schools,DC=indigo,DC=schools,DC=internal"
 $WOL_BC = "10.240.79.255"
 $IP_IPv4Address = "10.240.72.0"
@@ -7,9 +7,8 @@ $CCMProgramID = "CAS00235"
 $WindowsVersion = "10.0.17134" ## Is Windows 10 1803
 
 ### ------------ FUNCTIONS --------------------------
-function Send-WOL
-{
-<# 
+function Send-WOL {
+    <# 
   .SYNOPSIS  
     Send a WOL packet to a broadcast address
   .PARAMETER mac
@@ -20,26 +19,26 @@ function Send-WOL
    Send-WOL -mac 00:11:32:21:2D:11 -ip 192.168.8.255 
 #>
 
-[CmdletBinding()]
-param(
-[Parameter(Mandatory=$True,Position=1)]
-[string]$mac,
-[string]$ip="255.255.255.255", 
-[int]$port=9
-)
-$broadcast = [Net.IPAddress]::Parse($ip)
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $True, Position = 1)]
+        [string]$mac,
+        [string]$ip = "255.255.255.255", 
+        [int]$port = 9
+    )
+    $broadcast = [Net.IPAddress]::Parse($ip)
  
-$mac=(($mac.replace(":","")).replace("-","")).replace(".","")
-$target=0,2,4,6,8,10 | % {[convert]::ToByte($mac.substring($_,2),16)}
-$packet = (,[byte]255 * 6) + ($target * 16)
+    $mac = (($mac.replace(":", "")).replace("-", "")).replace(".", "")
+    $target = 0, 2, 4, 6, 8, 10 | % { [convert]::ToByte($mac.substring($_, 2), 16) }
+    $packet = (, [byte]255 * 6) + ($target * 16)
  
-$UDPclient = new-Object System.Net.Sockets.UdpClient
-$UDPclient.Connect($broadcast,$port)
-[void]$UDPclient.Send($packet, 102) 
+    $UDPclient = new-Object System.Net.Sockets.UdpClient
+    $UDPclient.Connect($broadcast, $port)
+    [void]$UDPclient.Send($packet, 102) 
 
 }
 
-Function Get-ADSIObject{
+Function Get-ADSIObject {
     <#
         .SYNOPSIS
             This function will query Active Directory using an ADSISearcher object.
@@ -68,14 +67,14 @@ Function Get-ADSIObject{
     #>
     [CmdletBinding()]
     Param(
-        [Parameter(Position=0)]
+        [Parameter(Position = 0)]
         [String]$LDAPFilter = '(objectclass=user)',
 
-        [Parameter(Position=1)]
+        [Parameter(Position = 1)]
         [String[]]$Property,
 
-        [Parameter(Position=2)]
-        [ValidateScript({Test-Connection -ComputerName $_ -Count 2 -Quiet})]
+        [Parameter(Position = 2)]
+        [ValidateScript({ Test-Connection -ComputerName $_ -Count 2 -Quiet })]
         [String]$DomainName = [DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name,
 
         [String]$SearchBase,
@@ -83,30 +82,30 @@ Function Get-ADSIObject{
         [Int]$PageSize = 1000
     )
 
-    DynamicParam{
-        if([String]::IsNullOrEmpty($DomainName)){$DomainName = [DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name}
+    DynamicParam {
+        if ([String]::IsNullOrEmpty($DomainName)) { $DomainName = [DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain().Name }
         
         $AttribColl = New-Object System.Collections.ObjectModel.Collection[System.Attribute]
-	    $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute
-	    $ParamAttrib.Mandatory = $false
-	    $ParamAttrib.ParameterSetName = '__AllParameterSets'
-	    $ParamAttrib.ValueFromPipeline = $false
-	    $ParamAttrib.ValueFromPipelineByPropertyName = $false
-	    $AttribColl.Add($ParamAttrib)
-	    $AttribColl.Add((New-Object System.Management.Automation.ValidateSetAttribute(([ADSI]"LDAP://$DomainName/RootDSE" | Select-Object -ExpandProperty namingContexts))))
-	    $RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('NamingContext', [string], $AttribColl)
-	    $RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
-	    $RuntimeParamDic.Add('NamingContext', $RuntimeParam)
-	    $RuntimeParamDic
+        $ParamAttrib = New-Object System.Management.Automation.ParameterAttribute
+        $ParamAttrib.Mandatory = $false
+        $ParamAttrib.ParameterSetName = '__AllParameterSets'
+        $ParamAttrib.ValueFromPipeline = $false
+        $ParamAttrib.ValueFromPipelineByPropertyName = $false
+        $AttribColl.Add($ParamAttrib)
+        $AttribColl.Add((New-Object System.Management.Automation.ValidateSetAttribute(([ADSI]"LDAP://$DomainName/RootDSE" | Select-Object -ExpandProperty namingContexts))))
+        $RuntimeParam = New-Object System.Management.Automation.RuntimeDefinedParameter('NamingContext', [string], $AttribColl)
+        $RuntimeParamDic = New-Object System.Management.Automation.RuntimeDefinedParameterDictionary
+        $RuntimeParamDic.Add('NamingContext', $RuntimeParam)
+        $RuntimeParamDic
     }
     
-    Begin{
+    Begin {
         $PsBoundParameters.GetEnumerator() | ForEach-Object -Process { New-Variable -Name $_.Key -Value $_.Value -ErrorAction 'SilentlyContinue' }
     }
-    Process{
+    Process {
         $ADSISearcher = [ADSISearcher]"$LDAPFilter"
         #Load each property if requested
-        if($Property){
+        if ($Property) {
             $Property | ForEach-Object -Process {
                 Write-Debug -Message "Adding $_ to properties to load..."
                 $ADSISearcher.PropertiesToLoad.Add($_.ToLower())
@@ -114,15 +113,15 @@ Function Get-ADSIObject{
         }
         
         #Use Naming Context if specified, otherwise, use the domain name
-        if($NamingContext){
+        if ($NamingContext) {
             Write-Debug -Message "Will use $NamingContext."
             $ADSISearcher.SearchRoot = [ADSI]"LDAP://$NamingContext"
         }
-        elseif($SearchBase){
+        elseif ($SearchBase) {
             Write-Debug -Message "Will use $SearchBase."
             $ADSISearcher.SearchRoot = [ADSI]"LDAP://$SearchBase"
         }
-        else{
+        else {
             Write-Debug -Message "Will use $DomainName."
             $ADSISearcher.SearchRoot = [ADSI]"LDAP://$DomainName"
         }
@@ -134,76 +133,76 @@ Function Get-ADSIObject{
         $LoadedProperties = $AllObjects | Select-Object -First 1 | Select-Object -ExpandProperty Properties | Select-Object -ExpandProperty PropertyNames
 
         #Going through each AD object
-        Foreach($Object in $AllObjects){
+        Foreach ($Object in $AllObjects) {
             #Hashtable for storing properties
             $CurrentObj = @{}
-            Foreach($LoadedProperty in $LoadedProperties){
+            Foreach ($LoadedProperty in $LoadedProperties) {
                 ##Adding each properties to the hashtable 
-                $CurrentObj.Add($LoadedProperty,$($Object.Properties.Item($LoadedProperty)))
+                $CurrentObj.Add($LoadedProperty, $($Object.Properties.Item($LoadedProperty)))
             }
             #Create an object per AD object with all properties
             New-Object -TypeName PSObject -Property $CurrentObj
         }
     }
-    End{}
+    End {}
 }
 
 ### ---------------- GET COMPUTERS FROM AD ---------
-try{
-$ADComputers = Get-ADSIObject -SearchBase $OUPath -LDAPFilter "(objectclass=Computer)"
+try {
+    $ADComputers = Get-ADSIObject -SearchBase $OUPath -LDAPFilter "(objectclass=Computer)"
 
-## Check Path has something in it
-if($ADComputers.Count -eq 0){
-Write-Error "AD Path Has No Computers in it!"
-break
-}
+    ## Check Path has something in it
+    if ($ADComputers.Count -eq 0) {
+        Write-Error "AD Path Has No Computers in it!"
+        break
+    }
 
 }
-catch{
-Write-Error "ADSIObject: Failed to Get Objects from AD"
+catch {
+    Write-Error "ADSIObject: Failed to Get Objects from AD"
 }
 
 ### ---------------- WAKE COMPUTERS -----------------
 ### Uses AD Computer Path, Wakes all devices
-foreach($_ in $ADComputers){
+foreach ($_ in $ADComputers) {
 
-### FIND JSON FILE
+    ### FIND JSON FILE
 
-if((Test-Path -Path ".\SCCMAutoDeploy\Devices\$($_.DNSHostName).JSON") -eq $false){
-#Write-Error "Audit: File Not Existing .\.\SCCMAutoDeploy\Devices\$($_.DNSHostName).JSON"
-Continue
-}
+    if ((Test-Path -Path ".\SCCMAutoDeploy\Devices\$($_.DNSHostName).JSON") -eq $false) {
+        #Write-Error "Audit: File Not Existing .\.\SCCMAutoDeploy\Devices\$($_.DNSHostName).JSON"
+        Continue
+    }
 
-### FIND MAC from File
-try{
-$MACAddress = (Get-Content -Path ".\SCCMAutoDeploy\Devices\$($_.DNSHostName).JSON" | ConvertFrom-Json).MAC
-}
-catch{
-Write-Error "Audit: Failed to get content of JSON File .\SCCMAutoDeploy\Devices\$($_.DNSHostName).JSON"
-}
+    ### FIND MAC from File
+    try {
+        $MACAddress = (Get-Content -Path ".\SCCMAutoDeploy\Devices\$($_.DNSHostName).JSON" | ConvertFrom-Json).MAC
+    }
+    catch {
+        Write-Error "Audit: Failed to get content of JSON File .\SCCMAutoDeploy\Devices\$($_.DNSHostName).JSON"
+    }
 
-## ---- Check MAC Not Null
-if($MACAddress -eq $null -or $MACAddress -eq ""){
-Write-Host "MAC Address is Null, Skipping"
-Continue
-}
+    ## ---- Check MAC Not Null
+    if ($MACAddress -eq $null -or $MACAddress -eq "") {
+        Write-Host "MAC Address is Null, Skipping"
+        Continue
+    }
 
-## ----- Send WOL ---------
-try{
-Write-Host "WOL: Sent to $($_.DNSHostName) | $($MACAddress)"
-Send-WOL -ip $WOL_BC -mac $MACAddress -port 9
-Send-WOL -ip $WOL_BC -mac $MACAddress -port 9
-Send-WOL -ip $WOL_BC -mac $MACAddress -port 9
-Send-WOL -ip $WOL_BC -mac $MACAddress -port 7
-Send-WOL -ip $WOL_BC -mac $MACAddress -port 7
-Send-WOL -ip $WOL_BC -mac $MACAddress -port 7
-}
-catch{
-Write-Error "WOL: Failed to Sent Wake Packet, Skipping"
-Continue
-}
+    ## ----- Send WOL ---------
+    try {
+        Write-Host "WOL: Sent to $($_.DNSHostName) | $($MACAddress)"
+        Send-WOL -ip $WOL_BC -mac $MACAddress -port 9
+        Send-WOL -ip $WOL_BC -mac $MACAddress -port 9
+        Send-WOL -ip $WOL_BC -mac $MACAddress -port 9
+        Send-WOL -ip $WOL_BC -mac $MACAddress -port 7
+        Send-WOL -ip $WOL_BC -mac $MACAddress -port 7
+        Send-WOL -ip $WOL_BC -mac $MACAddress -port 7
+    }
+    catch {
+        Write-Error "WOL: Failed to Sent Wake Packet, Skipping"
+        Continue
+    }
 
-## ------ END FOREACH ------------------------
+    ## ------ END FOREACH ------------------------
 }
 
 ### -------- WAIT -----------
@@ -211,24 +210,24 @@ Write-Host "Waiting 120 Seconds"
 #Sleep -Seconds 120
 
 ### ----------------- Wait and Run SCCM Task Sequence --------
-foreach($_ in $ADComputers){
+foreach ($_ in $ADComputers) {
 
-## Check Online State
-if((Test-Connection -ComputerName $_.DNSHostName -Count 10 -Quiet) -eq $false){
-Write-Error ("Connection: Host $($_.DNSHostName) Not Online after 10 Tries")
-Continue
-}
+    ## Check Online State
+    if ((Test-Connection -ComputerName $_.DNSHostName -Count 10 -Quiet) -eq $false) {
+        Write-Error ("Connection: Host $($_.DNSHostName) Not Online after 10 Tries")
+        Continue
+    }
 
-try{
-$IPUTask = (get-wmiobject -query "SELECT * FROM CCM_Program" -namespace "ROOT\ccm\ClientSDK" -ComputerName $_.DNSHostName) | Where-Object { $_.Name -like "*1809*" }
-Invoke-WmiMethod -Class CCM_ProgramsManager -Namespace "root\ccm\clientsdk" -ComputerName $_.DNSHostName -Name ExecutePrograms -argumentlist $IPUTask
+    try {
+        $IPUTask = (get-wmiobject -query "SELECT * FROM CCM_Program" -namespace "ROOT\ccm\ClientSDK" -ComputerName $_.DNSHostName) | Where-Object { $_.Name -like "*1809*" }
+        Invoke-WmiMethod -Class CCM_ProgramsManager -Namespace "root\ccm\clientsdk" -ComputerName $_.DNSHostName -Name ExecutePrograms -argumentlist $IPUTask
 
-Write-Host "Running $($CCMProgramID) Task Sequence"
-}
-catch{
-Write-Host "Failed to Get CCM_Program Data/ Execute the Task Sequence"
-}
+        Write-Host "Running $($CCMProgramID) Task Sequence"
+    }
+    catch {
+        Write-Host "Failed to Get CCM_Program Data/ Execute the Task Sequence"
+    }
 
 
-## END FOREACH
+    ## END FOREACH
 }
