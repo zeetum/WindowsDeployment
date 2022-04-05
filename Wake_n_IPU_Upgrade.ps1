@@ -3,7 +3,7 @@ $OUPath = "OU=School Managed,OU=Computers,OU=E5008S01,OU=Schools,DC=indigo,DC=sc
 $WOL_BC = "10.240.79.255"
 $IP_IPv4Address = "10.240.72.0"
 $IP_MASK = "255.255.248.0"
-$CCMProgramID = "CAS00235"
+$CCMProgramID = "CAS002EF"
 $WindowsVersion = "10.0.17134" ## Is Windows 10 1803
 
 # get-wmiobject -query "SELECT * FROM CCM_Program" -namespace "ROOT\ccm\ClientSDK" | Out-GridView
