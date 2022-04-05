@@ -1,11 +1,13 @@
 #### ---------- CONFIG ------------------------------
+# Required
 $OUPath = "OU=I.T. Office,OU=Block H,OU=Desktops,OU=School Managed,OU=Computers,OU=E5070S01,OU=Schools,DC=indigo,DC=schools,DC=internal"
-$WOL_BC = "<broadcast>"
+$WOL_BC = "<broadcast>" # Broadcast address of subnet the computers are on
+
+# Deprecated
 $IP_IPv4Address = "<IP Address>"
 $IP_MASK = "<Netmask>"
-$CCMProgramID = "CAS002EF"
+$CCMProgramID = "CAS002EF" # get-wmiobject -query "SELECT * FROM CCM_Program" -namespace "ROOT\ccm\ClientSDK" | Out-GridView
 
-# get-wmiobject -query "SELECT * FROM CCM_Program" -namespace "ROOT\ccm\ClientSDK" | Out-GridView
 
 ### ------------ FUNCTIONS --------------------------
 function Send-WOL {
