@@ -1,10 +1,9 @@
 #### ---------- CONFIG ------------------------------
 $OUPath = "OU=I.T. Office,OU=Block H,OU=Desktops,OU=School Managed,OU=Computers,OU=E5070S01,OU=Schools,DC=indigo,DC=schools,DC=internal"
-$WOL_BC = "10.224.15.255"
-$IP_IPv4Address = "10.224.9.0"
-$IP_MASK = "255.255.248.0"
+$WOL_BC = "<broadcast>"
+$IP_IPv4Address = "<IP Address>"
+$IP_MASK = "<Netmask>"
 $CCMProgramID = "CAS002EF"
-$WindowsVersion = "10.0.17134" ## Is Windows 10 1803
 
 # get-wmiobject -query "SELECT * FROM CCM_Program" -namespace "ROOT\ccm\ClientSDK" | Out-GridView
 
