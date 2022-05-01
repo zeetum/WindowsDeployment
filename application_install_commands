@@ -1,0 +1,21 @@
+Google Chrome:
+MsiExec.exe /i googlechromestandaloneenterprise64.msi /qn
+
+Java:
+jre-8u331-windows-x64.exe /s
+
+McAfee:
+setupEP.exe ADDLOCAL="FW,TP,WC" /qb
+
+Minecraft:
+MinecraftEducationEdition_x86_1.17.32.00.exe /exenoui AI_DESKTOP_SH=1 /qn
+
+Visual C++:
+VC_redist.x86.exe /Q
+VC_redist.x64.exe /Q
+
+VLC:
+vlc-3.0.17.4-win32.exe /L=1033 /S
+
+Rename Computer
+powershell -ExecutionPolicy Bypass -File Rename.ps1
