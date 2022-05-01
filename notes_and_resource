@@ -6,6 +6,10 @@ MicrosoftDeploymentToolkit_x64.msi
 adksetup.exe
 adkwinpesetup.exe
 
+Getting Drivers
+Log into a model of computer that needs updating
+Run Export_Drivers.ps1 from a USB to extract drivers
+
 Getting OSX Drivers
 https://twocanoes.com/knowledge-base/deploying-boot-camp-using-winpe-and-mdt/
 https://techdirectarchive.com/2020/12/06/how-to-import-drivers-in-dot-exe-into-microsoft-deployment-toolkit/
@@ -13,7 +17,8 @@ https://www.tecnogalaxy.org/how-to-enable-precision-touchpad-on-macbook-running-
 
 Adding Windows ISO and Applicationsto Image
 https://askme4tech.com/how-deploy-windows-10-custom-image-mdt
-https://www.anoopcnair.com/deploy-windows-captured-image-using-sccm-mdt/
+
+Add Applications from Application Install Commands
 
 Convert the following powershell scripts to EXE using ps2exe inside PowerShell
 ChangeHostname.ps1
