@@ -1522,15 +1522,15 @@ $searchparm = $searcher.FindOne()
 if ($searchparm)
 {
 #Computer name exists on domain so join domain with no OU parameter
-Add-Computer -DomainName $FullDomNme -Credential $creds –Verbose –Force
+Add-Computer -DomainName $FullDomNme -Credential $creds Â–Verbose Â–Force
 }
 else
 {
 #Computer name not on domain so uses function to choose OU and join domain
 $OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $usernme -RootOU "$LocalOU"
-Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname –Verbose –Force
+Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname Â–Verbose Â–Force
 }
-Restart-Computer -Force
+#Restart-Computer -Force
   }
 }
 
