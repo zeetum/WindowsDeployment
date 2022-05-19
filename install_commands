@@ -20,8 +20,14 @@ VC_redist.x64.exe /q /norestart
 VLC:
 vlc-3.0.17.4-win32.exe /L=1033 /S
 
-Rename Computer
+Office 365:
+powershell -ExecutionPolicy Bypass -File O365Setup.ps1 MS365Office64-NoAccess.xml
+
+Change Default Browser:
+copytostartup.bat
+
+Rename Computer:
 powershell -ExecutionPolicy Bypass -File Rename.ps1
 
-Domain Join
-powershell -noprofile -executionpolicy bypass -file JoinDomainRestartIf.ps1
+Domain Join:
+powershell -noprofile -executionpolicy bypass -file JoinDomain.ps1
