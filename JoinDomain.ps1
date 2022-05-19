@@ -1502,7 +1502,7 @@ Restart-Computer -Force
   }
   'Yes' {
 #Set local Parameters
-$Sitecode = "9999"
+$Sitecode = "5008"
 
 Set-TimeZone -Name "W. Australia Standard Time"
 
