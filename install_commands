@@ -1,3 +1,6 @@
+Administrator Password:
+Local<site>
+
 Google Chrome:
 MsiExec.exe /i googlechromestandaloneenterprise64.msi /qn
 
@@ -11,11 +14,14 @@ Minecraft:
 MinecraftEducationEdition_x86_1.17.32.00.exe /exenoui AI_DESKTOP_SH=1 /qn
 
 Visual C++:
-VC_redist.x86.exe /Q
-VC_redist.x64.exe /Q
+VC_redist.x86.exe /q /norestart
+VC_redist.x64.exe /q /norestart
 
 VLC:
 vlc-3.0.17.4-win32.exe /L=1033 /S
 
 Rename Computer
 powershell -ExecutionPolicy Bypass -File Rename.ps1
+
+Domain Join
+powershell -noprofile -executionpolicy bypass -file JoinDomainRestartIf.ps1
