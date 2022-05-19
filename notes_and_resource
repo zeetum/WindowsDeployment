@@ -19,8 +19,5 @@ Adding Windows ISO and Applicationsto Image
 https://askme4tech.com/how-deploy-windows-10-custom-image-mdt
 https://www.anoopcnair.com/deploy-windows-captured-image-using-sccm-mdt/
 
-Add Applications from install_commands
-
-Convert the following powershell scripts to EXE using ps2exe inside PowerShell
-ChangeHostname.ps1
-JoinAD.ps1
+Adding user and password into Powershell script:
+https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/get-credential?view=powershell-7.2
