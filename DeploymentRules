@@ -1,3 +1,10 @@
+========== Bootstrap.ini ==========
+[Settings]
+Priority=Default
+[Default]
+SkipBDDWelcome=YES
+===================================
+
 [Settings]
 Priority=Default
 [Default]
