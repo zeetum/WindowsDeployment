@@ -1499,26 +1499,32 @@ $form.Text = 'Plug in Ethernet'
 $form.Size = New-Object System.Drawing.Size(300,200)
 $form.StartPosition = 'CenterScreen'
 
-$okButton = New-Object System.Windows.Forms.Button
-$okButton.Location = New-Object System.Drawing.Point(75,120)
-$okButton.Size = New-Object System.Drawing.Size(75,23)
-$okButton.Text = 'OK'
-$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-$form.AcceptButton = $okButton
-$form.Controls.Add($okButton)
+$listLabel = New-Object System.Windows.Forms.label
+$listLabel.Location = New-Object System.Drawing.Size(7,10)
+$listLabel.width = 180
+$listLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+$listLabel.Text = "Select Site Code"
+$form.Controls.Add($listLabel)
 
 $listBox = New-Object System.Windows.Forms.ListBox
 $listBox.Location = New-Object System.Drawing.Point(10,40)
-$listBox.Size = New-Object System.Drawing.Size(260,20)
+$listBox.Size = New-Object System.Drawing.Size(260,200)
 $listBox.Height = 80
 $listBox.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 foreach ($item in $SiteCodes) {
 	$listBox.Items.Add($item)
 }
-
 $form.Controls.Add($listBox)
-$form.Topmost = $true
 
+$okButton = New-Object System.Windows.Forms.Button
+$okButton.Location = New-Object System.Drawing.Point(10,120)
+$okButton.Size = New-Object System.Drawing.Size(260,23)
+$okButton.Text = 'Connect'
+$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+$form.AcceptButton = $okButton
+$form.Controls.Add($okButton)
+
+$form.Topmost = $true
 $form.ShowDialog()
 $SiteCode = $listBox.SelectedItem
 # End Site selection Dropbox
