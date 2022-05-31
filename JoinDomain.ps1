@@ -1489,48 +1489,51 @@ A///AAIACw=='))
 
 } #End Function Choose-ADOrganizationalUnit
 
-# Site selection Dropbox
-$SiteCodes = @('5008','5167','5070')
+# Site selection chooser
+function DoE-SiteCode-Chooser([string[]]$SiteCodes) {
+	Add-Type -AssemblyName System.Windows.Forms
+	Add-Type -AssemblyName System.Drawing
+	$form = New-Object System.Windows.Forms.Form
+	$form.Text = 'Plug in Ethernet'
+	$form.Size = New-Object System.Drawing.Size(300,200)
+	$form.StartPosition = 'CenterScreen'
 
-Add-Type -AssemblyName System.Windows.Forms
-Add-Type -AssemblyName System.Drawing
-$form = New-Object System.Windows.Forms.Form
-$form.Text = 'Plug in Ethernet'
-$form.Size = New-Object System.Drawing.Size(300,200)
-$form.StartPosition = 'CenterScreen'
+	$listLabel = New-Object System.Windows.Forms.label
+	$listLabel.Location = New-Object System.Drawing.Size(7,10)
+	$listLabel.width = 180
+	$listLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$listLabel.Text = "Select Site Code"
+	$form.Controls.Add($listLabel)
 
-$listLabel = New-Object System.Windows.Forms.label
-$listLabel.Location = New-Object System.Drawing.Size(7,10)
-$listLabel.width = 180
-$listLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-$listLabel.Text = "Select Site Code"
-$form.Controls.Add($listLabel)
+	$listBox = New-Object System.Windows.Forms.ListBox
+	$listBox.Location = New-Object System.Drawing.Point(10,40)
+	$listBox.Size = New-Object System.Drawing.Size(260,200)
+	$listBox.Height = 80
+	$listBox.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	foreach ($item in $SiteCodes) {
+		$listBox.Items.Add($item)
+	}
+	$form.Controls.Add($listBox)
 
-$listBox = New-Object System.Windows.Forms.ListBox
-$listBox.Location = New-Object System.Drawing.Point(10,40)
-$listBox.Size = New-Object System.Drawing.Size(260,200)
-$listBox.Height = 80
-$listBox.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-foreach ($item in $SiteCodes) {
-	$listBox.Items.Add($item)
+	$okButton = New-Object System.Windows.Forms.Button
+	$okButton.Location = New-Object System.Drawing.Point(10,120)
+	$okButton.Size = New-Object System.Drawing.Size(260,23)
+	$okButton.Text = 'Connect'
+	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+	$form.AcceptButton = $okButton
+	$form.Controls.Add($okButton)
+
+	$form.Topmost = $true
+
+	do {
+		$form.ShowDialog()
+		$SiteCode = $listBox.SelectedItem
+	} while (!$SiteCode)
+
+	return $SiteCode
 }
-$form.Controls.Add($listBox)
 
-$okButton = New-Object System.Windows.Forms.Button
-$okButton.Location = New-Object System.Drawing.Point(10,120)
-$okButton.Size = New-Object System.Drawing.Size(260,23)
-$okButton.Text = 'Connect'
-$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-$form.AcceptButton = $okButton
-$form.Controls.Add($okButton)
-
-$form.Topmost = $true
-
-do {
-	$form.ShowDialog()
-	$SiteCode = $listBox.SelectedItem
-} while (!$SiteCode)
-# End Site selection Dropbox
+$SiteCode = DoE-SiteCode-Chooser -SiteCodes @('5008','5167','5070')
 
 # Get Credentials
 do {
@@ -1557,7 +1560,6 @@ if ($searchparm) {
 	Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
 }
 
-# Set Timezone
 Set-TimeZone -Name "W. Australia Standard Time"
 
 #Restart-Computer -Force
