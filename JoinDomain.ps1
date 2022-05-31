@@ -1495,7 +1495,7 @@ $SiteCodes = @('5008','5167','5070')
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
 $form = New-Object System.Windows.Forms.Form
-$form.Text = 'Select the SiteCode for your school'
+$form.Text = 'Plug in Ethernet'
 $form.Size = New-Object System.Drawing.Size(300,200)
 $form.StartPosition = 'CenterScreen'
 
@@ -1511,6 +1511,7 @@ $listBox = New-Object System.Windows.Forms.ListBox
 $listBox.Location = New-Object System.Drawing.Point(10,40)
 $listBox.Size = New-Object System.Drawing.Size(260,20)
 $listBox.Height = 80
+$listBox.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 foreach ($item in $SiteCodes) {
 	$listBox.Items.Add($item)
 }
