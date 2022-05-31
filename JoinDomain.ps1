@@ -1525,17 +1525,21 @@ $form.AcceptButton = $okButton
 $form.Controls.Add($okButton)
 
 $form.Topmost = $true
-$form.ShowDialog()
-$SiteCode = $listBox.SelectedItem
+
+do {
+	$form.ShowDialog()
+	$SiteCode = $listBox.SelectedItem
+} while (!$SiteCode)
 # End Site selection Dropbox
 
-Set-TimeZone -Name "W. Australia Standard Time"
-
-#Get Credentials and extract details
-$creds = Get-Credential -Message "domain\username and password is required to join PC to domain."
-$usernme = $creds.username
-$passwrd = $creds.GetNetworkCredential().password
-$Dom = $creds.GetNetworkCredential().domain
+# Get Credentials
+do {
+	Write-Output "Start While Loop"
+	$creds = Get-Credential -Message "Enter domain\username and password"
+	$usernme = $creds.username
+	$passwrd = $creds.GetNetworkCredential().password
+	$Dom = $creds.GetNetworkCredential().domain
+} while (!$Dom)
 $FullDomNme = $Dom+".schools.internal"
 $LocalOU = "OU=School Managed,OU=Computers,OU=E"+$SiteCode+"S01,OU=Schools,DC="+$Dom+",DC=schools,DC=internal"
 
@@ -1544,15 +1548,16 @@ $domaininfo = New-Object DirectoryServices.DirectoryEntry(("LDAP://$FullDomNme",
 $searcher = New-Object System.DirectoryServices.DirectorySearcher($domaininfo)
 $searcher.filter = "(cn=$env:computername)"
 $searchparm = $searcher.FindOne()
-if ($searchparm)
-{
-#Computer name exists on domain so join domain with no OU parameter
-Add-Computer -DomainName $FullDomNme -Credential $creds -Verbose -Force
+if ($searchparm) {
+	#Computer name exists on domain so join domain with no OU parameter
+	Add-Computer -DomainName $FullDomNme -Credential $creds -Verbose -Force
+} else {
+	#Computer name not on domain so uses function to choose OU and join domain
+	$OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $usernme -RootOU "$LocalOU"
+	Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
 }
-else
-{
-#Computer name not on domain so uses function to choose OU and join domain
-$OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $usernme -RootOU "$LocalOU"
-Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
-}
+
+# Set Timezone
+Set-TimeZone -Name "W. Australia Standard Time"
+
 #Restart-Computer -Force
