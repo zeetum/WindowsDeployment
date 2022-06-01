@@ -1489,6 +1489,7 @@ A///AAIACw=='))
 
 } #End Function Choose-ADOrganizationalUnit
 
+# Site Function Choose-SiteCode
 function Choose-SiteCode([string[]]$SiteCodes) {
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
@@ -1530,11 +1531,12 @@ function Choose-SiteCode([string[]]$SiteCodes) {
 	} while (!$SiteCode)
 
 	return $SiteCode
-} # End Function Choose-SiteCode
+} # Site Function Choose-SiteCode
 
 # Get Credentials
 do {
 	$creds = Get-Credential -Message "Enter domain\username and password"
+	if (!$creds) {exit} # If user hits cancel, exit the script
 	$usernme = $creds.username
 	$passwrd = $creds.GetNetworkCredential().password
 	$Dom = $creds.GetNetworkCredential().domain
