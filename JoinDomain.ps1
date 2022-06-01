@@ -1489,7 +1489,6 @@ A///AAIACw=='))
 
 } #End Function Choose-ADOrganizationalUnit
 
-# Site Function Choose-SiteCode
 function Choose-SiteCode([string[]]$SiteCodes) {
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
@@ -1531,11 +1530,10 @@ function Choose-SiteCode([string[]]$SiteCodes) {
 	} while (!$SiteCode)
 
 	return $SiteCode
-} # Site Function Choose-SiteCode
+} # End Function Choose-SiteCode
 
 # Get Credentials
 do {
-	Write-Output "Start While Loop"
 	$creds = Get-Credential -Message "Enter domain\username and password"
 	$usernme = $creds.username
 	$passwrd = $creds.GetNetworkCredential().password
