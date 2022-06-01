@@ -1490,6 +1490,7 @@ A///AAIACw=='))
 } #End Function Choose-ADOrganizationalUnit
 
 # Site Function Choose-SiteCode
+# $SiteCode = Choose-SiteCode -SiteCodes @('5008','5167','5070')
 function Choose-SiteCode([string[]]$SiteCodes) {
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
@@ -1544,6 +1545,11 @@ do {
 
 $FullDomNme = $Dom+".schools.internal"
 
+# Get the site code from the local DHCP server
+$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
+$DHCPServer = $DHCPServer.DHCPServer | Out-String
+$SiteCode = [System.Net.Dns]::GetHostByAddress($DHCPServer.Trim()).Hostname.substring(1, 4)
+
 #Search for existing domain account for this computer name and choose action
 $domaininfo = New-Object DirectoryServices.DirectoryEntry(("LDAP://$FullDomNme", $usernme, $passwrd))
 $searcher = New-Object System.DirectoryServices.DirectorySearcher($domaininfo)
@@ -1554,9 +1560,7 @@ if ($searchparm) {
 	Add-Computer -DomainName $FullDomNme -Credential $creds -Verbose -Force
 } else {
 	#Computer name not on domain so uses function to choose OU and join domain
-	$SiteCode = Choose-SiteCode -SiteCodes @('5008','5167','5070')
 	$LocalOU = "OU=School Managed,OU=Computers,OU=E"+$SiteCode+"S01,OU=Schools,DC="+$Dom+",DC=schools,DC=internal"
-	
 	$OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $usernme -RootOU "$LocalOU"
 	Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
 }
