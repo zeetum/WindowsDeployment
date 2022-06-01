@@ -1489,7 +1489,7 @@ A///AAIACw=='))
 
 } #End Function Choose-ADOrganizationalUnit
 
-# Site selection chooser
+# Site Function DoE-SiteCode-Chooser
 function DoE-SiteCode-Chooser([string[]]$SiteCodes) {
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
@@ -1531,9 +1531,7 @@ function DoE-SiteCode-Chooser([string[]]$SiteCodes) {
 	} while (!$SiteCode)
 
 	return $SiteCode
-}
-
-$SiteCode = DoE-SiteCode-Chooser -SiteCodes @('5008','5167','5070')
+} # Site Function DoE-SiteCode-Chooser
 
 # Get Credentials
 do {
@@ -1543,8 +1541,8 @@ do {
 	$passwrd = $creds.GetNetworkCredential().password
 	$Dom = $creds.GetNetworkCredential().domain
 } while (!$Dom)
+
 $FullDomNme = $Dom+".schools.internal"
-$LocalOU = "OU=School Managed,OU=Computers,OU=E"+$SiteCode+"S01,OU=Schools,DC="+$Dom+",DC=schools,DC=internal"
 
 #Search for existing domain account for this computer name and choose action
 $domaininfo = New-Object DirectoryServices.DirectoryEntry(("LDAP://$FullDomNme", $usernme, $passwrd))
@@ -1556,6 +1554,9 @@ if ($searchparm) {
 	Add-Computer -DomainName $FullDomNme -Credential $creds -Verbose -Force
 } else {
 	#Computer name not on domain so uses function to choose OU and join domain
+	$SiteCode = DoE-SiteCode-Chooser -SiteCodes @('5008','5167','5070')
+	$LocalOU = "OU=School Managed,OU=Computers,OU=E"+$SiteCode+"S01,OU=Schools,DC="+$Dom+",DC=schools,DC=internal"
+	
 	$OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $usernme -RootOU "$LocalOU"
 	Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
 }
