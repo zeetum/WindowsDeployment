@@ -1489,8 +1489,8 @@ A///AAIACw=='))
 
 } #End Function Choose-ADOrganizationalUnit
 
-# Site Function DoE-SiteCode-Chooser
-function DoE-SiteCode-Chooser([string[]]$SiteCodes) {
+# Site Function Choose-SiteCode
+function Choose-SiteCode([string[]]$SiteCodes) {
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
 	$form = New-Object System.Windows.Forms.Form
@@ -1531,7 +1531,7 @@ function DoE-SiteCode-Chooser([string[]]$SiteCodes) {
 	} while (!$SiteCode)
 
 	return $SiteCode
-} # Site Function DoE-SiteCode-Chooser
+} # Site Function Choose-SiteCode
 
 # Get Credentials
 do {
@@ -1554,7 +1554,7 @@ if ($searchparm) {
 	Add-Computer -DomainName $FullDomNme -Credential $creds -Verbose -Force
 } else {
 	#Computer name not on domain so uses function to choose OU and join domain
-	$SiteCode = DoE-SiteCode-Chooser -SiteCodes @('5008','5167','5070')
+	$SiteCode = Choose-SiteCode -SiteCodes @('5008','5167','5070')
 	$LocalOU = "OU=School Managed,OU=Computers,OU=E"+$SiteCode+"S01,OU=Schools,DC="+$Dom+",DC=schools,DC=internal"
 	
 	$OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $usernme -RootOU "$LocalOU"
