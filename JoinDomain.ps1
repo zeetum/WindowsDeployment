@@ -1546,7 +1546,7 @@ $DHCPServer = $DHCPServer.DHCPServer | Out-String
 $LocalDC = [System.Net.Dns]::GetHostByAddress($DHCPServer.Trim()).HostName.split(".")
 $SiteCode = $LocalDC[0].substring(1, 4)
 $Dom = $LocalDC[1]
-$FullDomain = $localDC[1..3] -join "."
+$FullDomNme = $localDC[1..3] -join "."
 
 #Search for existing domain account for this computer name and choose action
 $domaininfo = New-Object DirectoryServices.DirectoryEntry(("LDAP://$FullDomNme", $usernme, $passwrd))
