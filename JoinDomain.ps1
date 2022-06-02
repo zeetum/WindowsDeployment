@@ -1540,12 +1540,13 @@ if (!$creds) {exit} # If user hits cancel, exit the script
 $usernme = $creds.username
 $passwrd = $creds.GetNetworkCredential().password
 
-# Get the site code from the local DHCP server
+# Get the site code and domain from the local DHCP server
 $DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 $DHCPServer = $DHCPServer.DHCPServer | Out-String
-$LocalDC = [System.Net.Dns]::GetHostByAddress($DHCPServer.Trim()).HostName
-$FullDomNme = $LocalDC.substring(14)
-$SiteCode = $LocalDC.substring(1, 4)
+$LocalDC = [System.Net.Dns]::GetHostByAddress($DHCPServer.Trim()).HostName.split(".")
+$Dom = $LocalDC[1]
+$FullDomain = $localDC[1..3] -join "."
+$SiteCode = $LocalDC[0].substring(1, 4)
 
 #Search for existing domain account for this computer name and choose action
 $domaininfo = New-Object DirectoryServices.DirectoryEntry(("LDAP://$FullDomNme", $usernme, $passwrd))
