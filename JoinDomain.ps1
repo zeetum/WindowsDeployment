@@ -1535,20 +1535,17 @@ function Choose-SiteCode([string[]]$SiteCodes) {
 } # Site Function Choose-SiteCode
 
 # Get Credentials
-do {
-	$creds = Get-Credential -Message "Enter domain\username and password"
-	if (!$creds) {exit} # If user hits cancel, exit the script
-	$usernme = $creds.username
-	$passwrd = $creds.GetNetworkCredential().password
-	$Dom = $creds.GetNetworkCredential().domain
-} while (!$Dom)
-
-$FullDomNme = $Dom+".schools.internal"
+$creds = Get-Credential -Message "Enter domain\username and password"
+if (!$creds) {exit} # If user hits cancel, exit the script
+$usernme = $creds.username
+$passwrd = $creds.GetNetworkCredential().password
 
 # Get the site code from the local DHCP server
 $DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 $DHCPServer = $DHCPServer.DHCPServer | Out-String
-$SiteCode = [System.Net.Dns]::GetHostByAddress($DHCPServer.Trim()).Hostname.substring(1, 4)
+$LocalDC = [System.Net.Dns]::GetHostByAddress($DHCPServer.Trim()).HostName
+$FullDomNme = $LocalDC.substring(14)
+$SiteCode = $LocalDC.substring(1, 4)
 
 #Search for existing domain account for this computer name and choose action
 $domaininfo = New-Object DirectoryServices.DirectoryEntry(("LDAP://$FullDomNme", $usernme, $passwrd))
