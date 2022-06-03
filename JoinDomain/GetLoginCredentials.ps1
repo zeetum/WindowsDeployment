@@ -1,9 +1,15 @@
+function GetLocalDomainController() {
+    $DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
+    $DHCPServer = $DHCPServer.DHCPServer | Out-String
+    $LocalDC = [System.Net.Dns]::GetHostByAddress($DHCPServer.Trim()).HostName
+}
+
 function GetCredentials() {
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
 	$form = New-Object System.Windows.Forms.Form
 	$form.Text = 'Enter Administrator Credentials'
-	$form.Size = New-Object System.Drawing.Size(350,200)
+	$form.Size = New-Object System.Drawing.Size(350,300)
 	$form.StartPosition = 'CenterScreen'
 
 	$usernameLabel = New-Object System.Windows.Forms.label
@@ -32,6 +38,12 @@ function GetCredentials() {
     $passwordInput.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
     $form.Controls.Add($passwordInput)
 
+	$localDCLabel = New-Object System.Windows.Forms.label
+	$localDCLabel.Location = New-Object System.Drawing.Size(7,92)
+	$localDCLabel.width = 100
+	$localDCLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$form.Controls.Add($localDCLabel)
+
 	$okButton = New-Object System.Windows.Forms.Button
 	$okButton.Location = New-Object System.Drawing.Point(10,120)
 	$okButton.Size = New-Object System.Drawing.Size(260,23)
@@ -41,13 +53,14 @@ function GetCredentials() {
 	$form.Controls.Add($okButton)
 
     do {
-        $connected = get-wmiobject win32_networkadapter -filter "netconnectionstatus = 2"
+        $localDC = GetLocalDomainController
+        $localDCLabel.Text = $localDC
 		$form.ShowDialog()
         $username = $usernameInput.Text
         $password = $passwordInput.Text
-	} while (!$connected)
+	} while (!$localDC)
 
-	return @{'username' = $username; "password" = $password}
+	return @{'username' = $username; "password" = $password; "localDC" = $localDC}
 } # Site Function Choose-SiteCode
 
 GetCredentials
