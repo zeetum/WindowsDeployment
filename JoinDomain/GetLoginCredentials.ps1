@@ -1,4 +1,4 @@
-# Returns the hostname of the first valid DHCP server
+# Returns the hostname of the DHCP server
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = $DHCPServer.DHCPServer | Out-String
