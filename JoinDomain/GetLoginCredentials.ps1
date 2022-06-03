@@ -1,12 +1,17 @@
-
+# Returns the hostname of the first valid DHCP server
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = $DHCPServer.DHCPServer | Out-String
-	$LocalDC = [System.Net.Dns]::GetHostByAddress($DHCPServer.Trim()).HostName
-
+	try {
+		$LocalDC = GetHostEntry($DHCPServer.Trim()).HostName
+	} catch {
+		$LocalDC = ""
+	}
 	return $LocalDC
 }
 
+# Returns valid username, password and domain
+# Returns 0 on cancel
 function GetCredentials() {
 
 	Add-Type -AssemblyName System.Windows.Forms
@@ -36,7 +41,8 @@ function GetCredentials() {
 	$passwordLabel.Text = "Password"
 	$form.Controls.Add($passwordLabel)
 
-	$passwordInput = New-Object System.Windows.Forms.TextBox
+	$passwordInput = New-Object System.Windows.Forms.MaskedTextBox
+	$passwordInput.PasswordChar = '*'
 	$passwordInput.Location = New-Object System.Drawing.Point(117,50)
 	$passwordInput.Size = New-Object System.Drawing.Size(200,20)
 	$passwordInput.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
@@ -74,23 +80,26 @@ function GetCredentials() {
 	$form.Controls.Add($cancelButton)
 
 	do {
-		$DomainControllerFQDN = GetLocalDomainController
-		$localDCLabel.Text = $DomainControllerFQDN
-		if ($DomainControllerFQDN -eq "") {
-			$okButton.Text = "Retry"
-		} else {
-			$okButton.Text = "Connect"
-		}
+		$DomainController = GetLocalDomainController
+		$localDCLabel.Text = $DomainController
+
 		$action = $form.ShowDialog()
 		if ($action -eq "Cancel") {return 0}
 
 		$username = $usernameInput.Text
 		$password = $passwordInput.Text
 
-	} while ($DomainControllerFQDN -eq "")
+		$validate = (new-object directoryservices.directoryentry $DomainController,$username,$password).psbase.name -ne $null
+
+		if (!$validate) {
+			$okButton.Text = "Retry"
+		} else {
+			$okButton.Text = "Connect"
+		}
+	} while (!$validate)
 
 
-	return @{'username' = $username; "password" = $password; "localDC" = $DomainControllerFQDN}
+	return @{'username' = $username; "password" = $password; "localDC" = $DomainController}
 }
 
 GetCredentials
