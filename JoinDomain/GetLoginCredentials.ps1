@@ -1,4 +1,4 @@
-# Returns the hostname of the DHCP server
+# Returns the hostname of the  DHCP server
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = $DHCPServer.DHCPServer | Out-String
@@ -82,6 +82,11 @@ function GetCredentials() {
 	do {
 		$DomainController = GetLocalDomainController
 		$localDCLabel.Text = $DomainController
+        	if ($DomainController -eq "" -or $validate -eq '') {
+			$okButton.Text = "Retry"
+		} else {
+			$okButton.Text = "Connect"
+		}
 
 		$action = $form.ShowDialog()
 		if ($action -eq "Cancel") {return 0}
@@ -91,11 +96,6 @@ function GetCredentials() {
 
 		$validate = (new-object directoryservices.directoryentry $DomainController,$username,$password).psbase.name -ne $null
 
-		if (!$validate) {
-			$okButton.Text = "Retry"
-		} else {
-			$okButton.Text = "Connect"
-		}
 	} while (!$validate)
 
 
