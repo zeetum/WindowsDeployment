@@ -1489,6 +1489,51 @@ A///AAIACw=='))
 
 } #End Function Choose-ADOrganizationalUnit
 
+# Site Function Choose-SiteCode
+# $SiteCode = Choose-SiteCode -SiteCodes @('5008','5167','5070')
+function Choose-SiteCode([string[]]$SiteCodes) {
+	Add-Type -AssemblyName System.Windows.Forms
+	Add-Type -AssemblyName System.Drawing
+	$form = New-Object System.Windows.Forms.Form
+	$form.Text = 'Plug in Ethernet'
+	$form.Size = New-Object System.Drawing.Size(300,200)
+	$form.StartPosition = 'CenterScreen'
+
+	$listLabel = New-Object System.Windows.Forms.label
+	$listLabel.Location = New-Object System.Drawing.Size(7,10)
+	$listLabel.width = 180
+	$listLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$listLabel.Text = "Select Site Code"
+	$form.Controls.Add($listLabel)
+
+	$listBox = New-Object System.Windows.Forms.ListBox
+	$listBox.Location = New-Object System.Drawing.Point(10,40)
+	$listBox.Size = New-Object System.Drawing.Size(260,200)
+	$listBox.Height = 80
+	$listBox.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	foreach ($item in $SiteCodes) {
+		$listBox.Items.Add($item)
+	}
+	$form.Controls.Add($listBox)
+
+	$okButton = New-Object System.Windows.Forms.Button
+	$okButton.Location = New-Object System.Drawing.Point(10,120)
+	$okButton.Size = New-Object System.Drawing.Size(260,23)
+	$okButton.Text = 'Connect'
+	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+	$form.AcceptButton = $okButton
+	$form.Controls.Add($okButton)
+
+	$form.Topmost = $true
+
+	do {
+		$form.ShowDialog()
+		$SiteCode = $listBox.SelectedItem
+	} while (!$SiteCode)
+
+	return $SiteCode
+} # Site Function Choose-SiteCode
+
 # Get Credentials
 $creds = Get-Credential -Message "Enter username and password"
 if (!$creds) {exit} # If user hits cancel, exit the script
@@ -1502,7 +1547,7 @@ $LocalDC = [System.Net.Dns]::GetHostByAddress($DHCPServer.Trim()).HostName.split
 $SiteCode = $LocalDC[0].substring(1, 4)
 $Dom = $LocalDC[1]
 $FullDomNme = $localDC[1..3] -join "."
-Write-Host -NoNewline "DC Hostname:" ($localDC -join ".") # for debugging (i.e. DNS not returning FQDN)
+Write-Output "Domain Controller FQDN:"($localDC -join ".") # for debugging (i.e. DNS not returning FQDN)
 
 #Search for existing domain account for this computer name and choose action
 $domaininfo = New-Object DirectoryServices.DirectoryEntry(("LDAP://$FullDomNme", $usernme, $passwrd))
