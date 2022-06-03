@@ -70,7 +70,7 @@ function GetCredentials() {
 	$cancelButton = New-Object System.Windows.Forms.Button
 	$cancelButton.Location = New-Object System.Drawing.Point(170,160)
 	$cancelButton.Size = New-Object System.Drawing.Size(140,30)
-    $cancelButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$cancelButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$cancelButton.Text = 'Cancel'
     $cancelButton.DialogResult = "Cancel"
     $form.CancelButton = $cancelButton
@@ -78,7 +78,6 @@ function GetCredentials() {
 
     do {
         $DomainControllerFQDN = GetLocalDomainController
-        Write-Output ($DomainControllerFQDN -eq "")
         $localDCLabel.Text = $DomainControllerFQDN
         if ($DomainControllerFQDN -eq "") {
             $okButton.Text = "Retry"
