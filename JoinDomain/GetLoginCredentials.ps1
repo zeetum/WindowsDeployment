@@ -95,7 +95,10 @@ function GetCredentials() {
 		$password = $passwordInput.Text
 
 		$validate = (new-object directoryservices.directoryentry $DomainController,$username,$password).psbase.name -ne $null
-
+		if (!$validate) {
+			$usernameInput.BackColor = 'red'
+			$passwordInput.BackColor = 'red'
+		}
 	} while (!$validate)
 
 
