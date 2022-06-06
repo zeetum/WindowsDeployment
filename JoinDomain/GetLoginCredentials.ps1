@@ -82,7 +82,7 @@ function GetCredentials() {
 	do {
 		$DomainController = GetLocalDomainController
 		$localDCLabel.Text = $DomainController
-        	if ($DomainController -eq "" -or $validate -eq '') {
+        	if ($DomainController -eq "") {
 			$okButton.Text = "Retry"
 		} else {
 			$okButton.Text = "Connect"
@@ -95,7 +95,7 @@ function GetCredentials() {
 		$password = $passwordInput.Text
 
 		$validate = (new-object directoryservices.directoryentry $DomainController,$username,$password).psbase.name -ne $null
-		if (!$validate) {
+		if (!$validate -and $DomainController) {
 			$usernameInput.BackColor = 'red'
 			$passwordInput.BackColor = 'red'
 		}
