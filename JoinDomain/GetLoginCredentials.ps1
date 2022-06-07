@@ -2,12 +2,22 @@
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = $DHCPServer.DHCPServer | Out-String
+
 	try {
-		$LocalDC = GetHostEntry($DHCPServer.Trim()).HostName
+		$LocalDC = Resolve-DnsName($DHCPServer.Trim())
+		$LocalDC = $LocalDC.NameHost
 	} catch {
 		$LocalDC = ""
 	}
+
 	return $LocalDC
+}
+
+function TestCredentials($domain, $username, $password) {
+	Add-Type -AssemblyName System.DirectoryServices.AccountManagement 
+	$ContextType = [System.DirectoryServices.AccountManagement.ContextType]::Domain
+	$PrincipalContext = [System.DirectoryServices.AccountManagement.PrincipalContext]::new($ContextType, $domain)
+	return $PrincipalContext.ValidateCredentials($username,$password)
 }
 
 # Returns valid username, password and domain
@@ -94,7 +104,7 @@ function GetCredentials() {
 		$username = $usernameInput.Text
 		$password = $passwordInput.Text
 
-		$validate = (new-object directoryservices.directoryentry $DomainController,$username,$password).psbase.name -ne $null
+		$validate = TestCredentials -domain $DomainController -username $username -password $password
 		if (!$validate -and $DomainController) {
 			$usernameInput.BackColor = 'red'
 			$passwordInput.BackColor = 'red'
