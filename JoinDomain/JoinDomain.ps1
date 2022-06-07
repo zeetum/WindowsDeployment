@@ -1489,11 +1489,10 @@ A///AAIACw=='))
 
 } #End Function Choose-ADOrganizationalUnit
 
-
 # Get Credentials
 Import-Module .\GetLoginCredentials.psm1
 $LoginCredentials = GetCredentials
-if (!$LoginCredentials) { exit }
+if ($LoginCredentials -eq 0) { exit }
 $LocalDC = $LoginCredentials['localDC'].split(".")
 $SiteCode = $LocalDC[0].substring(1, 4)
 $Dom = $LocalDC[1]
