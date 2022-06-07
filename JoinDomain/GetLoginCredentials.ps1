@@ -96,6 +96,7 @@ function GetCredentials() {
 		$localDCLabel.Text = $DomainController
         	if ($DomainController -eq "") {
 			$okButton.Text = "Retry"
+			continue
 		} else {
 			$okButton.Text = "Connect"
 		}
