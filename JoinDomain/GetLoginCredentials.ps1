@@ -2,19 +2,23 @@
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = $DHCPServer.DHCPServer | Out-String
+
 	try {
 		$LocalDC = Resolve-DnsName($DHCPServer.Trim())
 		$LocalDC = $LocalDC.NameHost
 	} catch {
 		$LocalDC = ""
 	}
+
 	return $LocalDC
 }
 
 function TestCredentials($domain, $username, $password) {
+
 	Add-Type -AssemblyName System.DirectoryServices.AccountManagement 
 	$ContextType = [System.DirectoryServices.AccountManagement.ContextType]::Domain
 	$PrincipalContext = [System.DirectoryServices.AccountManagement.PrincipalContext]::new($ContextType, $domain)
+
 	return $PrincipalContext.ValidateCredentials($username,$password)
 }
 
