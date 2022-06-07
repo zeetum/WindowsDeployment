@@ -1,16 +1,16 @@
 # Returns the hostname of the  DHCP server
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
-	$DHCPServer = $DHCPServer.DHCPServer | Out-String
+	$DHCPServer = ($DHCPServer.DHCPServer | Out-String).Trim()
 
 	try {
-		$LocalDC = Resolve-DnsName($DHCPServer.Trim())
-		$LocalDC = $LocalDC.NameHost
+		$LocalDC = Resolve-DnsName($DHCPServer)
+		$LocalDC = $LocalDC.NameHost.Trim()
 	} catch {
 		$LocalDC = ""
 	}
 	
-	Write-Host "Server IP: "$DHCPServer.Trim()
+	Write-Host "Server IP: "$DHCPServer
 	Write-Host "Server FQDN: "$LocalDC
 	
 	return $LocalDC
