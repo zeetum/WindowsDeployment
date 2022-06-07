@@ -106,6 +106,7 @@ function GetCredentials() {
 		$action = $form.ShowDialog()
 		if ($action -eq "Cancel") {return 0}
 
+		$form.Add_Shown({$form.Activate(); $usernameInput.focus()})
 		$username = $usernameInput.Text
 		$password = $passwordInput.Text
 
