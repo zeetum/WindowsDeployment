@@ -2,7 +2,6 @@
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = $DHCPServer.DHCPServer | Out-String
-	Write-Host "Server IP: "$DHCPServer
 
 	try {
 		$LocalDC = Resolve-DnsName($DHCPServer.Trim())
@@ -10,8 +9,9 @@ function GetLocalDomainController() {
 	} catch {
 		$LocalDC = ""
 	}
-	Write-Host "Server FQDN: "$LocalDC
 	
+	Write-Host "Server IP: "$DHCPServer.Trim()
+	Write-Host "Server FQDN: "$LocalDC
 	return $LocalDC
 }
 
@@ -96,7 +96,7 @@ function GetCredentials() {
 	do {
 		$DomainController = GetLocalDomainController
 		$localDCLabel.Text = $DomainController
-        	if ($DomainController -eq "") {
+        if ($DomainController -eq "") {
 			$okButton.Text = "Retry"
 		} else {
 			$okButton.Text = "Connect"
@@ -119,4 +119,4 @@ function GetCredentials() {
 	return @{'username' = $username; "password" = $password; "localDC" = $DomainController}
 }
 
-GetCredentials
+Export-ModuleMember -Function GetCredentials
