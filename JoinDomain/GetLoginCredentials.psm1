@@ -12,6 +12,7 @@ function GetLocalDomainController() {
 	
 	Write-Host "Server IP: "$DHCPServer.Trim()
 	Write-Host "Server FQDN: "$LocalDC
+	
 	return $LocalDC
 }
 
