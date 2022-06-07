@@ -10,7 +10,8 @@ function GetLocalDomainController() {
 	} catch {
 		$LocalDC = ""
 	}
-
+	Write-Host "Server FQDN: "$LocalDC
+	
 	return $LocalDC
 }
 
