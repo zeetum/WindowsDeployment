@@ -2,14 +2,12 @@
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = $DHCPServer.DHCPServer | Out-String
-
 	try {
 		$LocalDC = Resolve-DnsName($DHCPServer.Trim())
 		$LocalDC = $LocalDC.NameHost
 	} catch {
 		$LocalDC = ""
 	}
-
 	return $LocalDC
 }
 
