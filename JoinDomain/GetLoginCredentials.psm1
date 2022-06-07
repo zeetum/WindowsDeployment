@@ -112,6 +112,8 @@ function GetCredentials() {
 
 		$validate = TestCredentials -domain $DomainController -username $username -password $password
 		if (!$validate -and $DomainController) {
+			$usernameInput.Text = ''
+			$passwordInput.Text = ''
 			$usernameInput.BackColor = 'red'
 			$passwordInput.BackColor = 'red'
 		}
