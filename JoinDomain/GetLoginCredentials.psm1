@@ -18,11 +18,16 @@ function GetLocalDomainController() {
 
 function TestCredentials($domain, $username, $password) {
 
-	Add-Type -AssemblyName System.DirectoryServices.AccountManagement 
-	$ContextType = [System.DirectoryServices.AccountManagement.ContextType]::Domain
-	$PrincipalContext = [System.DirectoryServices.AccountManagement.PrincipalContext]::new($ContextType, $domain)
+	try {
+		Add-Type -AssemblyName System.DirectoryServices.AccountManagement
+		$ContextType = [System.DirectoryServices.AccountManagement.ContextType]::Domain
+		$PrincipalContext = [System.DirectoryServices.AccountManagement.PrincipalContext]::new($ContextType, $domain)
+		$valid = $PrincipalContext.ValidateCredentials($username,$password)
+	} catch {
+		$valid = 0
+	}
 
-	return $PrincipalContext.ValidateCredentials($username,$password)
+	return $valid
 }
 
 # Returns valid username, password and domain
