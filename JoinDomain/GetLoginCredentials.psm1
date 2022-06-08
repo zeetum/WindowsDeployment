@@ -120,8 +120,8 @@ function GetCredentials() {
 		if (!$validate -and $DomainController) {
 			$usernameInput.Text = ''
 			$passwordInput.Text = ''
-			$usernameInput.BackColor = 'red'
-			$passwordInput.BackColor = 'red'
+			$usernameInput.BackColor = 'IndianRed'
+			$passwordInput.BackColor = 'IndianRed'
 		}
 	} while (!$validate)
 
