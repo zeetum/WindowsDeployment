@@ -17,6 +17,7 @@ function GetLocalDomainController() {
 }
 
 function TestCredentials($domain, $username, $password) {
+	if ($domain -eq "") { return 0 }
 
 	try {
 		Add-Type -AssemblyName System.DirectoryServices.AccountManagement
