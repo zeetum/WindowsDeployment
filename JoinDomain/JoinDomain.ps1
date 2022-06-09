@@ -1500,6 +1500,7 @@ $FullDomNme = $localDC[1..3] -join "."
 $username = $LoginCredentials['username']
 $password = $LoginCredentials['password']
 $creds = new-object -typename System.Management.Automation.PSCredential -argumentlist $Dom\$username, (ConvertTo-SecureString $password -AsPlainText -Force)
+Write-Host "Got credentials, trying to join domain"
 
 #Search for existing domain account for this computer name and choose action
 $domaininfo = New-Object DirectoryServices.DirectoryEntry(("LDAP://$FullDomNme", $username, $password))
