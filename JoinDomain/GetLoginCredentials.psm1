@@ -23,7 +23,7 @@ function TestCredentials($domain, $username, $password) {
 		Add-Type -AssemblyName System.DirectoryServices.AccountManagement
 		$ContextType = [System.DirectoryServices.AccountManagement.ContextType]::Domain
 		$PrincipalContext = [System.DirectoryServices.AccountManagement.PrincipalContext]::new($ContextType, $domain)
-		$valid = $PrincipalContext.ValidateCredentials($username,$password)
+		$valid = $PrincipalContext.ValidateCredentials($username,$password, "Negotiate")
 	} catch {
 		$valid = 0
 	}
