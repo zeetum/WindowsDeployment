@@ -1,0 +1,23 @@
+Luke's SharePoint
+https://educationwaeduau-my.sharepoint.com/personal/luke_marshall2_education_wa_edu_au/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fluke%5Fmarshall2%5Feducation%5Fwa%5Fedu%5Fau%2FDocuments%2FICTCollab%2FMDT%20Resources
+
+Installing MDT on Workstation Computer
+MicrosoftDeploymentToolkit_x64.msi
+adksetup.exe
+adkwinpesetup.exe
+
+Getting Drivers
+Log into a model of computer that needs updating
+Run Export_Drivers.ps1 from a USB to extract drivers
+
+Getting OSX Drivers
+https://twocanoes.com/knowledge-base/deploying-boot-camp-using-winpe-and-mdt/
+https://techdirectarchive.com/2020/12/06/how-to-import-drivers-in-dot-exe-into-microsoft-deployment-toolkit/
+https://www.tecnogalaxy.org/how-to-enable-precision-touchpad-on-macbook-running-windows-10-boot-camp/
+
+Adding Windows ISO and Applicationsto Image
+https://askme4tech.com/how-deploy-windows-10-custom-image-mdt
+https://www.anoopcnair.com/deploy-windows-captured-image-using-sccm-mdt/
+
+Adding user and password into Powershell script:
+https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.security/get-credential?view=powershell-7.2
