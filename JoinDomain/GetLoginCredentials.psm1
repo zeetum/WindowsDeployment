@@ -41,6 +41,7 @@ function GetCredentials() {
 	$form.Text = 'Enter Administrator Credentials'
 	$form.Size = New-Object System.Drawing.Size(350,240)
 	$form.StartPosition = 'CenterScreen'
+	$form.FormBorderStyle = 'FixedDialog'
 
 	$usernameLabel = New-Object System.Windows.Forms.label
 	$usernameLabel.Location = New-Object System.Drawing.Size(7,12)
@@ -110,7 +111,7 @@ function GetCredentials() {
 		}
 
 		$action = $form.ShowDialog()
-		if ($action -eq "Cancel") {return 0}
+		if ($action -eq "Cancel") { return 0 }
 
 		$form.Add_Shown({$form.Activate(); $usernameInput.focus()})
 		$username = $usernameInput.Text
