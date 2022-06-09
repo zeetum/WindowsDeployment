@@ -77,11 +77,20 @@ function GetCredentials() {
 	$DCPrompt.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$form.Controls.Add($DCPrompt)
 
+	$localDCAvailable = New-Object System.Windows.Forms.label
+	$localDCAvailable.Location = New-Object System.Drawing.Size(10,120)
+	$localDCAvailable.width = 25
+	$localDCAvailable.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$form.Controls.Add($localDCAvailable)
+
 	$localDCLabel = New-Object System.Windows.Forms.label
-	$localDCLabel.Location = New-Object System.Drawing.Size(10,120)
-	$localDCLabel.width = 300
+	$localDCLabel.Location = New-Object System.Drawing.Size(35,120)
+	$localDCLabel.width = 280
 	$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 	$form.Controls.Add($localDCLabel)
+
+	$Form.controls.AddRange(@($localDCAvailable,$localDCLabel))
+	$localDCAvailable.BringToFront()
 
 	$okButton = New-Object System.Windows.Forms.Button
 	$okButton.Location = New-Object System.Drawing.Point(20,160)
@@ -106,8 +115,14 @@ function GetCredentials() {
 		$localDCLabel.Text = $DomainController
 		if ($DomainController -eq "") {
 			$okButton.Text = "Retry"
+			$localDCAvailable.Text = [char]0x2716
+			$localDCAvailable.ForeColor = "IndianRed"
+			$usernameInput.BackColor = "white"
+			$passwordInput.BackColor = "white"
 		} else {
 			$okButton.Text = "Connect"
+			$localDCAvailable.Text = [char]0x2714
+			$localDCAvailable.ForeColor = "DarkOliveGreen"
 		}
 
 		$action = $form.ShowDialog()
