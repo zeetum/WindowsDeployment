@@ -78,7 +78,7 @@ function GetCredentials() {
 	$form.Controls.Add($DCPrompt)
 
 	$localDCLabel = New-Object System.Windows.Forms.label
-	$localDCLabel.Location = New-Object System.Drawing.Size(35,120)
+	$localDCLabel.Location = New-Object System.Drawing.Size(10,120)
 	$localDCLabel.width = 280
 	$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 	$form.Controls.Add($localDCLabel)
@@ -107,12 +107,12 @@ function GetCredentials() {
 			$okButton.Text = "Retry"
 			$localDCLabel.Text = [char]0x2716
 			$localDCLabel.ForeColor = "IndianRed"
-			$usernameInput.BackColor = "white"
-			$passwordInput.BackColor = "white"
+			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 		} else {
 			$okButton.Text = "Connect"
 			$localDCLabel.Text = $DomainController
 			$localDCLabel.ForeColor = "black"
+			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 		}
 
 		$action = $form.ShowDialog()
