@@ -119,7 +119,11 @@ function GetCredentials() {
 		if ($action -eq "Cancel") { return 0 }
 
 		$form.Add_Shown({$form.Activate(); $usernameInput.focus()})
-		$username = $usernameInput.Text
+		if ($usernameInput.Text.Contains("\")) {
+			$username = $usernameInput.Text.split("\")[1]
+		} else {
+			$username = $usernameInput.Text
+		}
 		$password = $passwordInput.Text
 
 		$validate = TestCredentials -domain $DomainController -username $username -password $password
