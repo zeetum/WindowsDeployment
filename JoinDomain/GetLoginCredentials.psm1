@@ -42,7 +42,7 @@ function Choose-SiteCode() {
 		$SiteCode = $listBox.SelectedItem
 	} while (!$SiteCode)
 
-	return [string]$SiteCode
+	return $SiteCode
 }
 
 # Returns the hostname of the DHCP server
@@ -147,8 +147,7 @@ function GetCredentials() {
 	$CredentialsForm.Controls.Add($cancelButton)
 
 	do {
-		#$DomainController = GetLocalDomainController
-		$DomainController = "e5070s01sv001"
+		$DomainController = GetLocalDomainController
 		if ($DomainController -eq "") {
 			$okButton.Text = "Retry"
 			$localDCLabel.Text = [char]0x2716
