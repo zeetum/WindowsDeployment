@@ -1,3 +1,50 @@
+# Returns the selected site code
+function Choose-SiteCode() {
+	$SiteCodes = @('5008','5167','5070')
+
+	Add-Type -AssemblyName System.Windows.Forms
+	Add-Type -AssemblyName System.Drawing
+	$ChooseForm = New-Object System.Windows.Forms.Form
+	$ChooseForm.Text = 'Choose Site Code'
+	$ChooseForm.Size = New-Object System.Drawing.Size(300,200)
+	$ChooseForm.StartPosition = 'CenterScreen'
+
+	$listLabel = New-Object System.Windows.Forms.label
+	$listLabel.Location = New-Object System.Drawing.Size(7,10)
+	$listLabel.width = 180
+	$listLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$listLabel.Text = "Select Site Code"
+	$ChooseForm.Controls.Add($listLabel)
+
+	$listBox = New-Object System.Windows.Forms.ListBox
+	$listBox.Location = New-Object System.Drawing.Point(10,40)
+	$listBox.Size = New-Object System.Drawing.Size(260,200)
+	$listBox.Height = 80
+	$listBox.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	foreach ($item in $SiteCodes) {
+		$listBox.Items.Add($item)
+	}
+	$ChooseForm.Controls.Add($listBox)
+
+	$okButton = New-Object System.Windows.Forms.Button
+	$okButton.Location = New-Object System.Drawing.Point(10,120)
+	$okButton.Size = New-Object System.Drawing.Size(260,23)
+	$okButton.Text = 'Connect'
+	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
+	$ChooseForm.AcceptButton = $okButton
+	$ChooseForm.Controls.Add($okButton)
+
+	$ChooseForm.Topmost = $true
+
+	do {
+		$action = $ChooseForm.ShowDialog()
+		if ($action -eq "Cancel") { exit }
+		$SiteCode = $listBox.SelectedItem
+	} while (!$SiteCode)
+
+	return [string]$SiteCode
+}
+
 # Returns the hostname of the DHCP server
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
@@ -14,6 +61,7 @@ function GetLocalDomainController() {
 	return $LocalDC
 }
 
+# Returns if the username and password validate against the domain
 function TestCredentials($domain, $username, $password) {
 	if ($domain -eq "") { return 0 }
 
@@ -29,49 +77,7 @@ function TestCredentials($domain, $username, $password) {
 	return $valid
 }
 
-function GetSiteCode() {
-	Add-Type -AssemblyName System.Windows.Forms
-	Add-Type -AssemblyName System.Drawing
-	$SiteCodeForm = New-Object System.Windows.Forms.Form
-	$SiteCodeForm.Text = 'Enter Site Code'
-	$SiteCodeForm.Size = New-Object System.Drawing.Size(200,120)
-	$SiteCodeForm.StartPosition = 'CenterScreen'
-	$SiteCodeForm.FormBorderStyle = 'FixedDialog'
-	
-	$SiteCodeLabel  = New-Object System.Windows.Forms.label
-	$SiteCodeLabel.Location = New-Object System.Drawing.Size(7,12)
-	$SiteCodeLabel.width = 100
-	$SiteCodeLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-	$SiteCodeLabel.Text = "Site Code:"
-	$SiteCodeForm.Controls.Add($SiteCodeLabel)
-
-	$SiteCodeInput = New-Object System.Windows.Forms.TextBox
-	$SiteCodeInput.Location = New-Object System.Drawing.Point(110,10)
-	$SiteCodeInput.Size = New-Object System.Drawing.Size(60,20)
-	$SiteCodeInput.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-	$SiteCodeForm.Controls.Add($SiteCodeInput)
-
-	$okButton = New-Object System.Windows.Forms.Button
-	$okButton.Location = New-Object System.Drawing.Point(12,44)
-	$okButton.Size = New-Object System.Drawing.Size(160,30)
-	$okButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-	$okButton.Text = 'Join'
-	$okButton.DialogResult = "OK"
-	$SiteCodeForm.AcceptButton = $okButton
-	$SiteCodeForm.Controls.Add($okButton)
-	
-	do {
-		$action = $SiteCodeForm.ShowDialog()
-		if ($action -eq "Cancel") { exit }
-		$SiteCode = $SiteCodeInput.Text
-	} while ($SiteCode.length -ne 4)
-	
-	return $SiteCode
-
-}
-
 # Returns valid username, password and domain
-# Returns 0 on cancel
 function GetCredentials() {
 
 	Add-Type -AssemblyName System.Windows.Forms
@@ -141,18 +147,24 @@ function GetCredentials() {
 	$CredentialsForm.Controls.Add($cancelButton)
 
 	do {
-		$DomainController = GetLocalDomainController
+		#$DomainController = GetLocalDomainController
+		$DomainController = "e5070s01sv001"
 		if ($DomainController -eq "") {
 			$okButton.Text = "Retry"
 			$localDCLabel.Text = [char]0x2716
 			$localDCLabel.ForeColor = "IndianRed"
 			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 		} else {
+			if ($DomainController.split("\").Length -eq 1) {
+				$usernameInput.BackColor = 'yellow'
+			}
 			$okButton.Text = "Connect"
 			$localDCLabel.Text = $DomainController
 			$localDCLabel.ForeColor = "black"
 			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 		}
+
+
 
 		$action = $CredentialsForm.ShowDialog()
 		if ($action -eq "Cancel") { exit }
@@ -161,8 +173,8 @@ function GetCredentials() {
 
 		if ($usernameInput.Text.Contains("\")) {
 			if ($DomainController -eq "") {
-				$SiteCode = GetSiteCode
-				$DomainController = "e" + $SiteCode + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
+				$SiteCode = Choose-SiteCode
+				$DomainController = "e" + $SiteCode[-1] + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
 			} elseif ($DomainController.split("\").Length -eq 1) {
 				$DomainController = $DomainController + "." + $usernameInput.Text.split("\")[0] + ".schools.internal"
 			}
