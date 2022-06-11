@@ -29,7 +29,7 @@ function TestCredentials($domain, $username, $password) {
 	return $valid
 }
 
-function EnterSiteCode() {
+function GetSiteCode() {
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
 	$SiteCodeForm = New-Object System.Windows.Forms.Form
@@ -161,7 +161,7 @@ function GetCredentials() {
 
 		if ($usernameInput.Text.Contains("\")) {
 			if ($DomainController -eq "") {
-				$SiteCode = EnterSiteCode
+				$SiteCode = GetSiteCode
 				$DomainController = "e" + $SiteCode + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
 			} elseif ($DomainController.split("\").Length -eq 1) {
 				$DomainController = $DomainController + "." + $usernameInput.Text.split("\")[0] + ".schools.internal"
