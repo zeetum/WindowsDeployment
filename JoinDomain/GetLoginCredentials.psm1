@@ -164,11 +164,8 @@ function GetCredentials() {
 			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 		}
 
-
-
 		$action = $CredentialsForm.ShowDialog()
 		if ($action -eq "Cancel") { exit }
-
 		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
 
 		if ($usernameInput.Text.Contains("\")) {
