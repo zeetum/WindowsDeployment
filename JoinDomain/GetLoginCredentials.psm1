@@ -120,6 +120,7 @@ function GetCredentials() {
 
 		$form.Add_Shown({$form.Activate(); $usernameInput.focus()})
 		if ($usernameInput.Text.Contains("\")) {
+			$DomainController = $usernameInput.Text.split("\")[0] + ".schools.internal"
 			$username = $usernameInput.Text.split("\")[1]
 		} else {
 			$username = $usernameInput.Text
