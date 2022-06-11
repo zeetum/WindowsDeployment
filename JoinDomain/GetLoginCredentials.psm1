@@ -1,7 +1,8 @@
-# Returns the hostname of the  DHCP server
+# Returns the hostname of the DHCP server
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = ($DHCPServer.DHCPServer | Out-String).Trim()
+	Write-Host "Server IP: "$DHCPServer
 
 	try {
 		$LocalDC = Resolve-DnsName($DHCPServer)
@@ -9,9 +10,6 @@ function GetLocalDomainController() {
 	} catch {
 		$LocalDC = ""
 	}
-	
-	Write-Host "Server IP: "$DHCPServer
-	Write-Host "Server FQDN: "$LocalDC
 	
 	return $LocalDC
 }
@@ -31,57 +29,98 @@ function TestCredentials($domain, $username, $password) {
 	return $valid
 }
 
+function EnterSiteCode() {
+	Add-Type -AssemblyName System.Windows.Forms
+	Add-Type -AssemblyName System.Drawing
+	$SiteCodeForm = New-Object System.Windows.Forms.Form
+	$SiteCodeForm.Text = 'Enter Site Code'
+	$SiteCodeForm.Size = New-Object System.Drawing.Size(200,120)
+	$SiteCodeForm.StartPosition = 'CenterScreen'
+	$SiteCodeForm.FormBorderStyle = 'FixedDialog'
+	
+	$SiteCodeLabel  = New-Object System.Windows.Forms.label
+	$SiteCodeLabel.Location = New-Object System.Drawing.Size(7,12)
+	$SiteCodeLabel.width = 100
+	$SiteCodeLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$SiteCodeLabel.Text = "Site Code:"
+	$SiteCodeForm.Controls.Add($SiteCodeLabel)
+
+	$SiteCodeInput = New-Object System.Windows.Forms.TextBox
+	$SiteCodeInput.Location = New-Object System.Drawing.Point(110,10)
+	$SiteCodeInput.Size = New-Object System.Drawing.Size(60,20)
+	$SiteCodeInput.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$SiteCodeForm.Controls.Add($SiteCodeInput)
+
+	$okButton = New-Object System.Windows.Forms.Button
+	$okButton.Location = New-Object System.Drawing.Point(12,44)
+	$okButton.Size = New-Object System.Drawing.Size(160,30)
+	$okButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$okButton.Text = 'Join'
+	$okButton.DialogResult = "OK"
+	$SiteCodeForm.AcceptButton = $okButton
+	$SiteCodeForm.Controls.Add($okButton)
+	
+	do {
+		$action = $SiteCodeForm.ShowDialog()
+		if ($action -eq "Cancel") { exit }
+		$SiteCode = $SiteCodeInput.Text
+	} while ($SiteCode.length -ne 4)
+	
+	return $SiteCode
+
+}
+
 # Returns valid username, password and domain
 # Returns 0 on cancel
 function GetCredentials() {
 
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
-	$form = New-Object System.Windows.Forms.Form
-	$form.Text = 'Enter Administrator Credentials'
-	$form.Size = New-Object System.Drawing.Size(350,240)
-	$form.StartPosition = 'CenterScreen'
-	$form.FormBorderStyle = 'FixedDialog'
+	$CredentialsForm = New-Object System.Windows.Forms.Form
+	$CredentialsForm.Text = 'Enter Administrator Credentials'
+	$CredentialsForm.Size = New-Object System.Drawing.Size(350,240)
+	$CredentialsForm.StartPosition = 'CenterScreen'
+	$CredentialsForm.FormBorderStyle = 'FixedDialog'
 
 	$usernameLabel = New-Object System.Windows.Forms.label
 	$usernameLabel.Location = New-Object System.Drawing.Size(7,12)
 	$usernameLabel.width = 100
 	$usernameLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$usernameLabel.Text = "Username"
-	$form.Controls.Add($usernameLabel)
+	$CredentialsForm.Controls.Add($usernameLabel)
 
 	$usernameInput = New-Object System.Windows.Forms.TextBox
 	$usernameInput.Location = New-Object System.Drawing.Point(117,10)
 	$usernameInput.Size = New-Object System.Drawing.Size(200,20)
 	$usernameInput.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-	$form.Controls.Add($usernameInput)
+	$CredentialsForm.Controls.Add($usernameInput)
 
 	$passwordLabel = New-Object System.Windows.Forms.label
 	$passwordLabel.Location = New-Object System.Drawing.Size(7,52)
 	$passwordLabel.width = 100
 	$passwordLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$passwordLabel.Text = "Password"
-	$form.Controls.Add($passwordLabel)
+	$CredentialsForm.Controls.Add($passwordLabel)
 
 	$passwordInput = New-Object System.Windows.Forms.MaskedTextBox
 	$passwordInput.PasswordChar = '*'
 	$passwordInput.Location = New-Object System.Drawing.Point(117,50)
 	$passwordInput.Size = New-Object System.Drawing.Size(200,20)
 	$passwordInput.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-	$form.Controls.Add($passwordInput)
+	$CredentialsForm.Controls.Add($passwordInput)
 
 	$DCPrompt = New-Object System.Windows.Forms.label
 	$DCPrompt.Location = New-Object System.Drawing.Size(10,90)
 	$DCPrompt.width = 300
 	$DCPrompt.text = "Local Domain Controller:"
 	$DCPrompt.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-	$form.Controls.Add($DCPrompt)
+	$CredentialsForm.Controls.Add($DCPrompt)
 
 	$localDCLabel = New-Object System.Windows.Forms.label
 	$localDCLabel.Location = New-Object System.Drawing.Size(10,120)
 	$localDCLabel.width = 280
 	$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
-	$form.Controls.Add($localDCLabel)
+	$CredentialsForm.Controls.Add($localDCLabel)
 
 	$okButton = New-Object System.Windows.Forms.Button
 	$okButton.Location = New-Object System.Drawing.Point(20,160)
@@ -89,8 +128,8 @@ function GetCredentials() {
 	$okButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$okButton.Text = 'Connect'
 	$okButton.DialogResult = "OK"
-	$form.AcceptButton = $okButton
-	$form.Controls.Add($okButton)
+	$CredentialsForm.AcceptButton = $okButton
+	$CredentialsForm.Controls.Add($okButton)
 
 	$cancelButton = New-Object System.Windows.Forms.Button
 	$cancelButton.Location = New-Object System.Drawing.Point(170,160)
@@ -98,8 +137,8 @@ function GetCredentials() {
 	$cancelButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$cancelButton.Text = 'Cancel'
 	$cancelButton.DialogResult = "Cancel"
-	$form.CancelButton = $cancelButton
-	$form.Controls.Add($cancelButton)
+	$CredentialsForm.CancelButton = $cancelButton
+	$CredentialsForm.Controls.Add($cancelButton)
 
 	do {
 		$DomainController = GetLocalDomainController
@@ -115,18 +154,25 @@ function GetCredentials() {
 			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 		}
 
-		$action = $form.ShowDialog()
-		if ($action -eq "Cancel") { return 0 }
+		$action = $CredentialsForm.ShowDialog()
+		if ($action -eq "Cancel") { exit }
 
-		$form.Add_Shown({$form.Activate(); $usernameInput.focus()})
+		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
+
 		if ($usernameInput.Text.Contains("\")) {
-			$DomainController = $usernameInput.Text.split("\")[0] + ".schools.internal"
+			if ($DomainController -eq "") {
+				$SiteCode = EnterSiteCode
+				$DomainController = "e" + $SiteCode + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
+			} elseif ($DomainController.split("\").Length -eq 1) {
+				$DomainController = $DomainController + "." + $usernameInput.Text.split("\")[0] + ".schools.internal"
+			}
 			$username = $usernameInput.Text.split("\")[1]
 		} else {
 			$username = $usernameInput.Text
 		}
 		$password = $passwordInput.Text
 
+		Write-Host "Server FQDN: "$DomainController
 		$validate = TestCredentials -domain $DomainController -username $username -password $password
 		if (!$validate -and $DomainController) {
 			$usernameInput.Text = ''
@@ -135,7 +181,6 @@ function GetCredentials() {
 			$passwordInput.BackColor = 'IndianRed'
 		}
 	} while (!$validate)
-
 
 	return @{'username' = $username; "password" = $password; "localDC" = $DomainController}
 }
