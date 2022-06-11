@@ -28,8 +28,9 @@ function Choose-SiteCode() {
 
 	$okButton = New-Object System.Windows.Forms.Button
 	$okButton.Location = New-Object System.Drawing.Point(10,120)
-	$okButton.Size = New-Object System.Drawing.Size(260,23)
-	$okButton.Text = 'Connect'
+	$okButton.Size = New-Object System.Drawing.Size(260,30)
+	$okButton.Text = 'Join'
+	$okButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
 	$ChooseForm.AcceptButton = $okButton
 	$ChooseForm.Controls.Add($okButton)
