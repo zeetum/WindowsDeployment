@@ -155,7 +155,7 @@ function GetCredentials() {
 			$localDCLabel.ForeColor = "IndianRed"
 			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 		} else {
-			if ($DomainController.split("\").Length -eq 1) {
+			if ($DomainController.split(".").Length -eq 1) {
 				$usernameInput.BackColor = 'yellow'
 			}
 			$okButton.Text = "Connect"
@@ -172,7 +172,7 @@ function GetCredentials() {
 			if ($DomainController -eq "") {
 				$SiteCode = Choose-SiteCode
 				$DomainController = "e" + $SiteCode[-1] + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
-			} elseif ($DomainController.split("\").Length -eq 1) {
+			} elseif ($DomainController.split(".").Length -eq 1) {
 				$DomainController = $DomainController + "." + $usernameInput.Text.split("\")[0] + ".schools.internal"
 			}
 			$username = $usernameInput.Text.split("\")[1]
