@@ -184,6 +184,7 @@ function GetCredentials() {
 		$password = $passwordInput.Text
 
 		Write-Host "Server FQDN: "$DomainController
+		#does this work with just the hostname?
 		$validate = TestCredentials -domain $DomainController -username $username -password $password
 		if (!$validate -and $DomainController) {
 			$usernameInput.Text = ''
