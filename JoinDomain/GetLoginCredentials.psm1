@@ -29,18 +29,27 @@ function Choose-SiteCode() {
 
 	$okButton = New-Object System.Windows.Forms.Button
 	$okButton.Location = New-Object System.Drawing.Point(10,120)
-	$okButton.Size = New-Object System.Drawing.Size(260,30)
+	$okButton.Size = New-Object System.Drawing.Size(125,30)
 	$okButton.Text = 'Join'
 	$okButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
 	$ChooseForm.AcceptButton = $okButton
 	$ChooseForm.Controls.Add($okButton)
 
+	$cancelButton = New-Object System.Windows.Forms.Button
+	$cancelButton.Location = New-Object System.Drawing.Point(140,120)
+	$cancelButton.Size = New-Object System.Drawing.Size(130,30)
+	$cancelButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
+	$cancelButton.Text = 'Cancel'
+	$cancelButton.DialogResult = "Cancel"
+	$ChooseForm.CancelButton = $cancelButton
+	$ChooseForm.Controls.Add($cancelButton)
+
 	$ChooseForm.Topmost = $true
 
 	do {
 		$action = $ChooseForm.ShowDialog()
-		if ($action -eq "Cancel") { exit }
+		if ($action -eq "Cancel") { return 0 }
 		$SiteCode = $listBox.SelectedItem
 	} while (!$SiteCode)
 
@@ -168,6 +177,7 @@ function GetCredentials() {
 
 		if ($usernameInput.Text.Contains("\")) {
 			$SiteCode = Choose-SiteCode
+			if (!$SiteCode[-1]) { continue }
 			$DomainController = "e" + $SiteCode[-1] + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
 			$username = $usernameInput.Text.split("\")[1]
 		} else {
