@@ -40,7 +40,7 @@ function Choose-SiteCode() {
 
 	do {
 		$action = $ChooseForm.ShowDialog()
-		if ($action -eq "Cancel") { exit }
+		if ($action -eq "Cancel") { return 0 }
 		$SiteCode = $listBox.SelectedItem
 	} while (!$SiteCode)
 
@@ -168,6 +168,7 @@ function GetCredentials() {
 
 		if ($usernameInput.Text.Contains("\")) {
 			$SiteCode = Choose-SiteCode
+			if (!$SiteCode) { continue }
 			$DomainController = "e" + $SiteCode[-1] + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
 			$username = $usernameInput.Text.split("\")[1]
 		} else {
