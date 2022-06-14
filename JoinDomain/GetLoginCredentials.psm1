@@ -6,19 +6,13 @@ function Choose-SiteCode() {
 	Add-Type -AssemblyName System.Drawing
 	$ChooseForm = New-Object System.Windows.Forms.Form
 	$ChooseForm.Text = 'Choose Site Code'
-	$ChooseForm.Size = New-Object System.Drawing.Size(300,200)
+	$ChooseForm.Size = New-Object System.Drawing.Size(295,167)
 	$ChooseForm.StartPosition = 'CenterScreen'
 	$ChooseForm.FormBorderStyle = 'FixedDialog'
-
-	$listLabel = New-Object System.Windows.Forms.label
-	$listLabel.Location = New-Object System.Drawing.Size(7,10)
-	$listLabel.width = 180
-	$listLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-	$listLabel.Text = "Select Site Code"
-	$ChooseForm.Controls.Add($listLabel)
+	$ChooseForm.ControlBox = $False
 
 	$listBox = New-Object System.Windows.Forms.ListBox
-	$listBox.Location = New-Object System.Drawing.Point(10,40)
+	$listBox.Location = New-Object System.Drawing.Point(10,10)
 	$listBox.Size = New-Object System.Drawing.Size(260,200)
 	$listBox.Height = 80
 	$listBox.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
@@ -28,7 +22,7 @@ function Choose-SiteCode() {
 	$ChooseForm.Controls.Add($listBox)
 
 	$okButton = New-Object System.Windows.Forms.Button
-	$okButton.Location = New-Object System.Drawing.Point(10,120)
+	$okButton.Location = New-Object System.Drawing.Point(10,88)
 	$okButton.Size = New-Object System.Drawing.Size(125,30)
 	$okButton.Text = 'Join'
 	$okButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
@@ -37,7 +31,7 @@ function Choose-SiteCode() {
 	$ChooseForm.Controls.Add($okButton)
 
 	$cancelButton = New-Object System.Windows.Forms.Button
-	$cancelButton.Location = New-Object System.Drawing.Point(140,120)
+	$cancelButton.Location = New-Object System.Drawing.Point(140,88)
 	$cancelButton.Size = New-Object System.Drawing.Size(130,30)
 	$cancelButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$cancelButton.Text = 'Cancel'
@@ -95,7 +89,7 @@ function GetCredentials() {
 	Add-Type -AssemblyName System.Drawing
 	$CredentialsForm = New-Object System.Windows.Forms.Form
 	$CredentialsForm.Text = 'Enter Administrator Credentials'
-	$CredentialsForm.Size = New-Object System.Drawing.Size(350,240)
+	$CredentialsForm.Size = New-Object System.Drawing.Size(344,230)
 	$CredentialsForm.StartPosition = 'CenterScreen'
 	$CredentialsForm.FormBorderStyle = 'FixedDialog'
 
@@ -140,8 +134,8 @@ function GetCredentials() {
 	$CredentialsForm.Controls.Add($localDCLabel)
 
 	$okButton = New-Object System.Windows.Forms.Button
-	$okButton.Location = New-Object System.Drawing.Point(20,160)
-	$okButton.Size = New-Object System.Drawing.Size(140,30)
+	$okButton.Location = New-Object System.Drawing.Point(15,150)
+	$okButton.Size = New-Object System.Drawing.Size(145,30)
 	$okButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$okButton.Text = 'Connect'
 	$okButton.DialogResult = "OK"
@@ -149,8 +143,8 @@ function GetCredentials() {
 	$CredentialsForm.Controls.Add($okButton)
 
 	$cancelButton = New-Object System.Windows.Forms.Button
-	$cancelButton.Location = New-Object System.Drawing.Point(170,160)
-	$cancelButton.Size = New-Object System.Drawing.Size(140,30)
+	$cancelButton.Location = New-Object System.Drawing.Point(170,150)
+	$cancelButton.Size = New-Object System.Drawing.Size(145,30)
 	$cancelButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$cancelButton.Text = 'Cancel'
 	$cancelButton.DialogResult = "Cancel"
