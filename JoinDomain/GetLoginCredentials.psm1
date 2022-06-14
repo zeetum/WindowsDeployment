@@ -157,8 +157,8 @@ function GetCredentials() {
 		} else {
 			if ($DomainController.split(".").Length -eq 1) {
 				$usernameInput.BackColor = 'yellow'
-			} elseif ($passwordInput.BackColor -ne 'IndianRed') {
-				$usernameInput.BackColor = 'white'
+			} elseif ($passwordInput.BackColor -eq 'IndianRed') {
+				$usernameInput.BackColor = 'IndianRed'
 			}
 			$okButton.Text = "Connect"
 			$localDCLabel.Text = $DomainController
