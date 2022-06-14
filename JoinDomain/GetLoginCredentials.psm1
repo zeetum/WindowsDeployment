@@ -155,11 +155,6 @@ function GetCredentials() {
 			$localDCLabel.ForeColor = "IndianRed"
 			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 		} else {
-			if ($DomainController.split(".").Length -eq 1) {
-				$usernameInput.BackColor = 'yellow'
-			} elseif ($passwordInput.BackColor -eq 'IndianRed') {
-				$usernameInput.BackColor = 'IndianRed'
-			}
 			$okButton.Text = "Connect"
 			$localDCLabel.Text = $DomainController
 			$localDCLabel.ForeColor = "black"
@@ -171,12 +166,8 @@ function GetCredentials() {
 		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
 
 		if ($usernameInput.Text.Contains("\")) {
-			if ($DomainController -eq "") {
-				$SiteCode = Choose-SiteCode
-				$DomainController = "e" + $SiteCode[-1] + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
-			} elseif ($DomainController.split(".").Length -eq 1) {
-				$DomainController = $DomainController + "." + $usernameInput.Text.split("\")[0] + ".schools.internal"
-			}
+			$SiteCode = Choose-SiteCode
+			$DomainController = "e" + $SiteCode[-1] + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
 			$username = $usernameInput.Text.split("\")[1]
 		} else {
 			$username = $usernameInput.Text
