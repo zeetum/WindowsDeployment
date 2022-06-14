@@ -8,6 +8,7 @@ function Choose-SiteCode() {
 	$ChooseForm.Text = 'Choose Site Code'
 	$ChooseForm.Size = New-Object System.Drawing.Size(300,200)
 	$ChooseForm.StartPosition = 'CenterScreen'
+	$CredentialsForm.FormBorderStyle = 'FixedDialog'
 
 	$listLabel = New-Object System.Windows.Forms.label
 	$listLabel.Location = New-Object System.Drawing.Size(7,10)
