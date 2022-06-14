@@ -157,7 +157,7 @@ function GetCredentials() {
 		} else {
 			if ($DomainController.split(".").Length -eq 1) {
 				$usernameInput.BackColor = 'yellow'
-			} else {
+			} elseif ($passwordInput.BackColor -ne 'IndianRed') {
 				$usernameInput.BackColor = 'white'
 			}
 			$okButton.Text = "Connect"
