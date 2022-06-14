@@ -64,7 +64,7 @@ function GetLocalDomainController() {
 
 # Returns if the username and password validate against the domain
 function TestCredentials($domain, $username, $password) {
-	if ($domain -eq "") { return 0 }
+	if ($domain.split(".").Length -ne 4) { return 0 }
 
 	try {
 		Add-Type -AssemblyName System.DirectoryServices.AccountManagement
@@ -184,7 +184,6 @@ function GetCredentials() {
 		$password = $passwordInput.Text
 
 		Write-Host "Server FQDN: "$DomainController
-		#does this work with just the hostname?
 		$validate = TestCredentials -domain $DomainController -username $username -password $password
 		if (!$validate -and $DomainController) {
 			$usernameInput.Text = ''
