@@ -1,20 +1,21 @@
 # Returns the selected site code
 function Choose-SiteCode() {
 	$SiteCodes = @('5008','5167','5070')
+	$len = $SiteCodes.length
 
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
 	$ChooseForm = New-Object System.Windows.Forms.Form
 	$ChooseForm.Text = 'Choose Site Code'
-	$ChooseForm.Size = New-Object System.Drawing.Size(295,167)
+	$ChooseForm.Size = New-Object System.Drawing.Size(295,(95 + $len * 22))
 	$ChooseForm.StartPosition = 'CenterScreen'
 	$ChooseForm.FormBorderStyle = 'FixedDialog'
 	$ChooseForm.ControlBox = $False
 
 	$listBox = New-Object System.Windows.Forms.ListBox
 	$listBox.Location = New-Object System.Drawing.Point(10,10)
-	$listBox.Size = New-Object System.Drawing.Size(260,200)
-	$listBox.Height = 80
+	$listBox.Size = New-Object System.Drawing.Size(260,30)
+	$listBox.Height = 24 * $len
 	$listBox.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	foreach ($item in $SiteCodes) {
 		$listBox.Items.Add($item)
@@ -22,8 +23,8 @@ function Choose-SiteCode() {
 	$ChooseForm.Controls.Add($listBox)
 
 	$okButton = New-Object System.Windows.Forms.Button
-	$okButton.Location = New-Object System.Drawing.Point(10,88)
-	$okButton.Size = New-Object System.Drawing.Size(125,30)
+	$okButton.Location = New-Object System.Drawing.Point(10,(19 + $len * 22))
+	$okButton.Size = New-Object System.Drawing.Size(126,30)
 	$okButton.Text = 'Join'
 	$okButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
@@ -31,8 +32,8 @@ function Choose-SiteCode() {
 	$ChooseForm.Controls.Add($okButton)
 
 	$cancelButton = New-Object System.Windows.Forms.Button
-	$cancelButton.Location = New-Object System.Drawing.Point(140,88)
-	$cancelButton.Size = New-Object System.Drawing.Size(130,30)
+	$cancelButton.Location = New-Object System.Drawing.Point(143,(19 + $len * 22))
+	$cancelButton.Size = New-Object System.Drawing.Size(126,30)
 	$cancelButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$cancelButton.Text = 'Cancel'
 	$cancelButton.DialogResult = "Cancel"
