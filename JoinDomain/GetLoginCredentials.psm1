@@ -70,7 +70,7 @@ function GetLocalDomainController() {
 # Returns if the username and password validate against the domain
 function TestCredentials($domain, $username, $password) {
 	if ($domain.split(".").Length -ne 4) {
-		Write-Host "Domain Name Fail"
+		Write-Host "Domain Name Failed"
 		return 0
 	}
 
