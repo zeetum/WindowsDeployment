@@ -69,7 +69,10 @@ function GetLocalDomainController() {
 
 # Returns if the username and password validate against the domain
 function TestCredentials($domain, $username, $password) {
-	if ($domain.split(".").Length -ne 4) { return 0 }
+	if ($domain.split(".").Length -ne 4) {
+		Write-Host "Domain FQDN incorrect"
+		return 0
+	}
 
 	try {
 		Add-Type -AssemblyName System.DirectoryServices.AccountManagement
