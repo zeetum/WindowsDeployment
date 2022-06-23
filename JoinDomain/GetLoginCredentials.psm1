@@ -2,6 +2,9 @@
 function Choose-SiteCode() {
 	$SiteCodes = @('5008','5167','5070')
 	$len = $SiteCodes.length
+	if ($len -eq 1) {
+		return $SiteCodes[0]
+	}
 
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
