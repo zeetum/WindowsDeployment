@@ -4,11 +4,11 @@ $NICs = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object -FilterScript {
 # USB Ethernet adapters and the Surface Dock Ethernet adapter have a VendorID starting with USB.
 # Therefore, using PCI should eliminate all Ethernet adapters that are not connected using a PCI connection
     
-If ($NICs | Where-Object { $PSItem.NetConnectionID -eq "Ethernet" })
+If ($NICs | Where-Object { $PSItem.NetConnectionID -eq "WiFi" })
 {   #If there is a Physical ethernet adapter, use that MAC address
     $MACAddress = @($NICs | Where-Object { $PSItem.NetConnectionID -like "Ethernet" })[0].MACAddress.Replace(':','')
 }
-ElseIf ($NICs | Where-Object { $PSItem.NetConnectionID -eq "WiFi" })
+ElseIf ($NICs | Where-Object { $PSItem.NetConnectionID -eq "Ethernet" })
 {   #Otherwise, use the Wi-Fi MAC address if it exists
     $MACAddress = @($NICs | Where-Object { $PSItem.NetConnectionID -like "WiFi" })[0].MACAddress.Replace(':','')
 }
