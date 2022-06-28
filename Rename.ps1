@@ -2,13 +2,13 @@
 $NICs = Get-WmiObject -Class Win32_NetworkAdapter | Where-Object -FilterScript {$PSItem.PhysicalAdapter} | Where-Object { $PSItem.PNPDeviceID -like "PCI\*" }
    
 $MACAddress = ""
-If ($NICs | Where-Object { $PSItem.NetConnectionID -eq "WiFi" }) {
+if ($NICs | Where-Object { $PSItem.NetConnectionID -eq "WiFi" }) {
     $MACAddress = @($NICs | Where-Object { $PSItem.NetConnectionID -like "WiFi" })[0].MACAddress.Replace(':','')
-} ElseIf ($NICs | Where-Object { $PSItem.NetConnectionID -eq "Ethernet" }) {
+} elseif ($NICs | Where-Object { $PSItem.NetConnectionID -eq "Ethernet" }) {
     $MACAddress = @($NICs | Where-Object { $PSItem.NetConnectionID -like "Ethernet" })[0].MACAddress.Replace(':','')
 }
 
-If ($MACAddress) {
+if ($MACAddress) {
     Rename-Computer -NewName "MS$MACAddress" -Force
 }
 #Restart-Computer
