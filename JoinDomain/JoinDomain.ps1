@@ -688,7 +688,6 @@ Password"
 			}
             If ($Credential)
             {
-                $Credential = Get-Credential $Credential -Message "Please enter credentials to connect to domain '$Domain'"
 			    try
 			    {
 				    $root = New-Object -TypeName System.DirectoryServices.DirectoryEntry("LDAP://$DomainDN",$Credential.UserName,$Credential.GetNetworkCredential().password)
@@ -725,7 +724,6 @@ Password"
                 $Domain = $Domain.Replace('DC=','.').TrimStart('DC=')
 			}
 			New-Variable -Name DomainDN -Value $DomainDN -Scope 1
-			$Credential = Get-Credential $Credential -Message "Please enter credentials to connect to domain '$Domain'"
 			try
 			{
                 $LDAPTest = Test-LDAPConnection -ComputerName $Domain
@@ -1512,7 +1510,7 @@ if ($searchparm) {
 } else {
 	#Computer name not on domain so uses function to choose OU and join domain
 	$LocalOU = "OU=School Managed,OU=Computers,OU=E"+$SiteCode+"S01,OU=Schools,DC="+$Dom+",DC=schools,DC=internal"
-	$OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $username -RootOU "$LocalOU"
+	$OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $creds -RootOU $LocalOU
 	Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
 }
 
