@@ -55,6 +55,7 @@ function Choose-SiteCode() {
 }
 
 # Returns the hostname of the DHCP server
+# (Resolve-DnsName ((Resolve-DnsName "rodc.site.internal").IPAddress)).NameHost
 function GetLocalDomainController() {
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = ($DHCPServer.DHCPServer | Out-String).Trim()
