@@ -84,15 +84,19 @@ function TestCredentials($domain, $username, $password) {
 		Write-Host "Domain Name Failed"
 		return 0
 	}
-	Write-Host "Authenticating: "$domain
-
+	
 	try {
+		Write-Host "Authenticating: "$domain
 		Add-Type -AssemblyName System.DirectoryServices.AccountManagement
 		$ContextType = [System.DirectoryServices.AccountManagement.ContextType]::Domain
 		$PrincipalContext = [System.DirectoryServices.AccountManagement.PrincipalContext]::new($ContextType, $domain)
 		$valid = $PrincipalContext.ValidateCredentials($username,$password, "Negotiate")
 	} catch {
 		$valid = 0
+	}
+
+	if (!$valid) {
+		Write-Host "Authentication Failed"
 	}
 
 	return $valid
@@ -213,7 +217,7 @@ function GetCredentials() {
 		if ($action -eq "Cancel") { exit }
 		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
 
-		$validate = TestCredentials -domain $DomainController -username $usernameInput.Text -password $passwordInput.Text
+		$validate = TestCredentials -domain $localDCLabel.Text -username $usernameInput.Text -password $passwordInput.Text
 		if (!$validate -and $DomainController) {
 			$usernameInput.Text = ''
 			$passwordInput.Text = ''
