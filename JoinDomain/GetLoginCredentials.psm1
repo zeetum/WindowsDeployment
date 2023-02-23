@@ -165,10 +165,10 @@ function GetCredentials() {
 			$selectDCButton.Text = [char]0x2B1B
 		} else {
 			$localDCLabel.Text = ""
+			$selectDCButton.Text = [char]0x2B1C
 			$global:manualDC = $false
 			$DomainController = GetLocalDomainController
 			$localDCLabel.Text = $DomainController
-			$selectDCButton.Text = [char]0x2B1C
 		}
 	})
 	$CredentialsForm.Controls.Add($selectDCButton)
