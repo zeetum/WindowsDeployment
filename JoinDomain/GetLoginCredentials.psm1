@@ -58,9 +58,9 @@ function Choose-SiteCode() {
 # Returns the hostname of the DHCP server
 # (Resolve-DnsName ((Resolve-DnsName "rodc.site.internal").IPAddress)).NameHost
 function GetLocalDomainController() {
+	Write-Host "`nConnecting...."
 	$DHCPServer = Get-CimInstance Win32_NetworkAdapterConfiguration -Filter "DHCPEnabled=$true" | Select DHCPServer
 	$DHCPServer = ($DHCPServer.DHCPServer | Out-String).Trim()
-	Write-Host "Server IP: "$DHCPServer
 
 	try {
 		$LocalDC = Resolve-DnsName($DHCPServer)
@@ -69,6 +69,12 @@ function GetLocalDomainController() {
 		$LocalDC = ""
 	}
 	
+	if ($LocalDC) {
+		Write-Host "Local Server: "$DHCPServer
+	} else {
+		Write-Host "Connection Failed"
+	}
+
 	return $LocalDC
 }
 
@@ -78,6 +84,7 @@ function TestCredentials($domain, $username, $password) {
 		Write-Host "Domain Name Failed"
 		return 0
 	}
+	Write-Host "Authenticating: "$domain
 
 	try {
 		Add-Type -AssemblyName System.DirectoryServices.AccountManagement
@@ -132,31 +139,39 @@ function GetCredentials() {
 	$DCPrompt = New-Object System.Windows.Forms.label
 	$DCPrompt.Location = New-Object System.Drawing.Size(10,90)
 	$DCPrompt.width = 300
-	$DCPrompt.text = "Local Domain Controller:"
+	$DCPrompt.text = "Domain Controller:"
 	$DCPrompt.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$CredentialsForm.Controls.Add($DCPrompt)
 
 	$selectDCButton = New-Object System.Windows.Forms.Button
 	$selectDCButton.Location = New-Object System.Drawing.Point(15,115)
 	$selectDCButton.Size = New-Object System.Drawing.Size(28,28)
-	$selectDCButton.Font = New-Object System.Drawing.Font("Arial",12,[System.Drawing.FontStyle]::Regular)
-
-	$global:manualDC = ""
-	$selectDCButton.Add_Click({
-		$siteDetails = Choose-SiteCode
-		if ($siteDetails.count -eq 5) {
-			$global:manualDC = "e" + $siteDetails[4] + "s01sv001." + $siteDetails[3] + ".schools.internal"
-		} else {
-			$global:manualDC = ""
-		}
-	})
-	$CredentialsForm.Controls.Add($selectDCButton)
+	$selectDCButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 
 	$localDCLabel = New-Object System.Windows.Forms.label
 	$localDCLabel.Location = New-Object System.Drawing.Size(50,120)
 	$localDCLabel.width = 280
 	$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 	$CredentialsForm.Controls.Add($localDCLabel)
+
+	$global:manualDC = $false
+	$selectDCButton.Text = [char]0x2B1C
+	$selectDCButton.Add_Click({
+		$siteDetails = Choose-SiteCode
+		if ($siteDetails.count -eq 5) {
+			$global:manualDC = $true
+			$DomainController = "e" + $siteDetails[4] + "s01sv001." + $siteDetails[3] + ".schools.internal"
+			$localDCLabel.Text = $DomainController
+			$selectDCButton.Text = [char]0x2B1B
+		} else {
+			$localDCLabel.Text = ""
+			$global:manualDC = $false
+			$DomainController = GetLocalDomainController
+			$localDCLabel.Text = $DomainController
+			$selectDCButton.Text = [char]0x2B1C
+		}
+	})
+	$CredentialsForm.Controls.Add($selectDCButton)
 
 	$okButton = New-Object System.Windows.Forms.Button
 	$okButton.Location = New-Object System.Drawing.Point(15,150)
@@ -182,32 +197,23 @@ function GetCredentials() {
 		if ($DomainController -eq "") {
 			$usernameInput.BackColor = 'White'
 			$passwordInput.BackColor = 'White'
-			$selectDCButton.Text = [char]0x2716
-			$selectDCButton.ForeColor = "IndianRed"
+
+			$okButton.BackColor = "IndianRed"
 			$okButton.Text = "Retry"
 		} else {
-			$selectDCButton.Text = [char]0x2714
-			$selectDCButton.ForeColor = "Green"
+			$okButton.BackColor = "Green"
 			$okButton.Text = "Connect"
 		}
 
-		if ($global:manualDC) {
-			$DomainController = $global:manualDC
-		} else {
-			$DomainController = GetLocalDomainController
+		if (!$global:manualDC) {
+			$localDCLabel.Text = $DomainController
 		}
-		$localDCLabel.Text = $DomainController
 
 		$action = $CredentialsForm.ShowDialog()
 		if ($action -eq "Cancel") { exit }
 		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
 
-
-		$username = $usernameInput.Text
-		$password = $passwordInput.Text
-
-		Write-Host "Server FQDN: "$DomainController
-		$validate = TestCredentials -domain $DomainController -username $username -password $password
+		$validate = TestCredentials -domain $DomainController -username $usernameInput.Text -password $passwordInput.Text
 		if (!$validate -and $DomainController) {
 			$usernameInput.Text = ''
 			$passwordInput.Text = ''
