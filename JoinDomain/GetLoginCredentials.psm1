@@ -149,7 +149,6 @@ function GetCredentials() {
 		} else {
 			$global:manualDC = ""
 		}
-		
 	})
 	$CredentialsForm.Controls.Add($selectDCButton)
 
