@@ -1,5 +1,6 @@
 # Returns the selected site code
 function Choose-SiteCode() {
+	$domColour = "indigo"
 	$SiteCodes = @('5008','5167','5070')
 	$len = $SiteCodes.length
 	if ($len -eq 1) {
@@ -28,7 +29,7 @@ function Choose-SiteCode() {
 	$okButton = New-Object System.Windows.Forms.Button
 	$okButton.Location = New-Object System.Drawing.Point(10,(19 + $len * 22))
 	$okButton.Size = New-Object System.Drawing.Size(126,30)
-	$okButton.Text = 'Join'
+	$okButton.Text = 'Set'
 	$okButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
 	$ChooseForm.AcceptButton = $okButton
@@ -38,7 +39,7 @@ function Choose-SiteCode() {
 	$cancelButton.Location = New-Object System.Drawing.Point(143,(19 + $len * 22))
 	$cancelButton.Size = New-Object System.Drawing.Size(126,30)
 	$cancelButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-	$cancelButton.Text = 'Cancel'
+	$cancelButton.Text = 'Auto'
 	$cancelButton.DialogResult = "Cancel"
 	$ChooseForm.CancelButton = $cancelButton
 	$ChooseForm.Controls.Add($cancelButton)
@@ -51,7 +52,7 @@ function Choose-SiteCode() {
 		$SiteCode = $listBox.SelectedItem
 	} while (!$SiteCode)
 
-	return $SiteCode
+	return  @($domColour, $SiteCode)
 }
 
 # Returns the hostname of the DHCP server
@@ -135,8 +136,25 @@ function GetCredentials() {
 	$DCPrompt.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$CredentialsForm.Controls.Add($DCPrompt)
 
+	$selectDCButton = New-Object System.Windows.Forms.Button
+	$selectDCButton.Location = New-Object System.Drawing.Point(15,115)
+	$selectDCButton.Size = New-Object System.Drawing.Size(28,28)
+	$selectDCButton.Font = New-Object System.Drawing.Font("Arial",12,[System.Drawing.FontStyle]::Regular)
+
+	$global:manualDC = ""
+	$selectDCButton.Add_Click({
+		$siteDetails = Choose-SiteCode
+		if ($siteDetails.count -eq 5) {
+			$global:manualDC = "e" + $siteDetails[4] + "s01sv001." + $siteDetails[3] + ".schools.internal"
+		} else {
+			$global:manualDC = ""
+		}
+		
+	})
+	$CredentialsForm.Controls.Add($selectDCButton)
+
 	$localDCLabel = New-Object System.Windows.Forms.label
-	$localDCLabel.Location = New-Object System.Drawing.Size(10,120)
+	$localDCLabel.Location = New-Object System.Drawing.Size(50,120)
 	$localDCLabel.width = 280
 	$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 	$CredentialsForm.Controls.Add($localDCLabel)
@@ -161,30 +179,32 @@ function GetCredentials() {
 
 	do {
 		$DomainController = GetLocalDomainController
+		
 		if ($DomainController -eq "") {
+			$usernameInput.BackColor = 'White'
+			$passwordInput.BackColor = 'White'
+			$selectDCButton.Text = [char]0x2716
+			$selectDCButton.ForeColor = "IndianRed"
 			$okButton.Text = "Retry"
-			$localDCLabel.Text = [char]0x2716
-			$localDCLabel.ForeColor = "IndianRed"
-			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 		} else {
+			$selectDCButton.Text = [char]0x2714
+			$selectDCButton.ForeColor = "Green"
 			$okButton.Text = "Connect"
-			$localDCLabel.Text = $DomainController
-			$localDCLabel.ForeColor = "black"
-			$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 		}
+
+		if ($global:manualDC) {
+			$DomainController = $global:manualDC
+		} else {
+			$DomainController = GetLocalDomainController
+		}
+		$localDCLabel.Text = $DomainController
 
 		$action = $CredentialsForm.ShowDialog()
 		if ($action -eq "Cancel") { exit }
 		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
 
-		if ($usernameInput.Text.Contains("\")) {
-			$SiteCode = Choose-SiteCode
-			if (!$SiteCode[-1]) { continue }
-			$DomainController = "e" + $SiteCode[-1] + "s01sv001." + $usernameInput.Text.split("\")[0] + ".schools.internal"
-			$username = $usernameInput.Text.split("\")[1]
-		} else {
-			$username = $usernameInput.Text
-		}
+
+		$username = $usernameInput.Text
 		$password = $passwordInput.Text
 
 		Write-Host "Server FQDN: "$DomainController
