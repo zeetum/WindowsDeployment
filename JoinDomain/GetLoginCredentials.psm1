@@ -1,4 +1,4 @@
-# Returns the selected site code
+# Returns the selected site code domain controller address
 function Choose-SiteCode() {
 	$domColour = "indigo"
 	$SiteCodes = @('5008','5167','5070')
