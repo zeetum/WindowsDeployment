@@ -222,7 +222,7 @@ function GetCredentials() {
 		}
 	} while (!$validate)
 
-	return @{'username' = $usernameInput.Text; "password" = $passwordInput.Text; "localDC" = $DCAddress.Text}
+	return @{'username' = $usernameInput.Text; "password" = $passwordInput.Text; "DCAddress" = $DCAddress.Text}
 }
 
 Export-ModuleMember -Function GetCredentials
