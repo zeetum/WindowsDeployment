@@ -1,4 +1,4 @@
-# Returns the selected site code domain controller address
+# Returns the selected site code
 function Choose-SiteCode() {
 	$domColour = "indigo"
 	$SiteCodes = @('5008','5167','5070')
@@ -222,7 +222,7 @@ function GetCredentials() {
 		}
 	} while (!$validate)
 
-	return @{'username' = $username; "password" = $password; "localDC" = $DomainController}
+	return @{'username' = $usernameInput.Text; "password" = $passwordInput.Text; "localDC" = $localDCLabel.Text}
 }
 
 Export-ModuleMember -Function GetCredentials
