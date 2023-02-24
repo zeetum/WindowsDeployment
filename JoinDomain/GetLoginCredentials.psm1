@@ -147,11 +147,11 @@ function GetCredentials() {
 	$DCPrompt.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$CredentialsForm.Controls.Add($DCPrompt)
 
-	$localDCLabel = New-Object System.Windows.Forms.label
-	$localDCLabel.Location = New-Object System.Drawing.Size(50,120)
-	$localDCLabel.width = 280
-	$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
-	$CredentialsForm.Controls.Add($localDCLabel)
+	$DCAddress = New-Object System.Windows.Forms.label
+	$DCAddress.Location = New-Object System.Drawing.Size(50,120)
+	$DCAddress.width = 280
+	$DCAddress.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
+	$CredentialsForm.Controls.Add($DCAddress)
 
 	$selectDCButton = New-Object System.Windows.Forms.Button
 	$selectDCButton.Location = New-Object System.Drawing.Point(15,115)
@@ -161,12 +161,12 @@ function GetCredentials() {
 	$selectDCButton.Add_Click({
 		$global:manualDC = $(Choose-SiteCode)[3]
 		if ($manualDC) {
-			$localDCLabel.Text = $manualDC
+			$DCAddress.Text = $manualDC
 			$selectDCButton.Text = [char]0x2B1B
 		} else {
-			$localDCLabel.Text = ""
+			$DCAddress.Text = ""
 			$selectDCButton.Text = [char]0x2B1C
-			$localDCLabel.Text = GetLocalDomainController
+			$DCAddress.Text = GetLocalDomainController
 		}
 	})
 	$CredentialsForm.Controls.Add($selectDCButton)
@@ -204,7 +204,7 @@ function GetCredentials() {
 		}
 
 		if (!$global:manualDC) {
-			$localDCLabel.Text = $localDC
+			$DCAddress.Text = $localDC
 		}
 
 		$action = $CredentialsForm.ShowDialog()
@@ -212,7 +212,7 @@ function GetCredentials() {
 		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
 
 		if ($localDC) {
-			$validate = TestCredentials -domain $localDCLabel.Text -username $usernameInput.Text -password $passwordInput.Text
+			$validate = TestCredentials -domain $DCAddress.Text -username $usernameInput.Text -password $passwordInput.Text
 			if (!$validate) {
 				$usernameInput.Text = ''
 				$passwordInput.Text = ''
@@ -222,7 +222,7 @@ function GetCredentials() {
 		}
 	} while (!$validate)
 
-	return @{'username' = $usernameInput.Text; "password" = $passwordInput.Text; "localDC" = $localDCLabel.Text}
+	return @{'username' = $usernameInput.Text; "password" = $passwordInput.Text; "localDC" = $DCAddress.Text}
 }
 
 Export-ModuleMember -Function GetCredentials
