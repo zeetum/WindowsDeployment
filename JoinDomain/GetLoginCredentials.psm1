@@ -52,7 +52,7 @@ function Choose-SiteCode() {
 		$SiteCode = $listBox.SelectedItem
 	} while (!$SiteCode)
 
-	return  @($domColour, $SiteCode)
+	return  'e' + $SiteCode + 's01sv001.' + $domColour + '.schools.internal'
 }
 
 # Returns the hostname of the DHCP server
@@ -161,18 +161,16 @@ function GetCredentials() {
 	$global:manualDC = $false
 	$selectDCButton.Text = [char]0x2B1C
 	$selectDCButton.Add_Click({
-		$siteDetails = Choose-SiteCode
-		if ($siteDetails.count -eq 5) {
+		$manualDC = Choose-SiteCode
+		if ($manualDC[3]) {
 			$global:manualDC = $true
-			$DomainController = "e" + $siteDetails[4] + "s01sv001." + $siteDetails[3] + ".schools.internal"
-			$localDCLabel.Text = $DomainController
+			$localDCLabel.Text = $manualDC[3]
 			$selectDCButton.Text = [char]0x2B1B
 		} else {
 			$localDCLabel.Text = ""
 			$selectDCButton.Text = [char]0x2B1C
 			$global:manualDC = $false
-			$DomainController = GetLocalDomainController
-			$localDCLabel.Text = $DomainController
+			$localDCLabel.Text = GetLocalDomainController
 		}
 	})
 	$CredentialsForm.Controls.Add($selectDCButton)
