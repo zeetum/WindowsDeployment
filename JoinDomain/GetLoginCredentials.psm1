@@ -147,17 +147,16 @@ function GetCredentials() {
 	$DCPrompt.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$CredentialsForm.Controls.Add($DCPrompt)
 
-	$selectDCButton = New-Object System.Windows.Forms.Button
-	$selectDCButton.Location = New-Object System.Drawing.Point(15,115)
-	$selectDCButton.Size = New-Object System.Drawing.Size(28,28)
-	$selectDCButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
-
 	$localDCLabel = New-Object System.Windows.Forms.label
 	$localDCLabel.Location = New-Object System.Drawing.Size(50,120)
 	$localDCLabel.width = 280
 	$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 	$CredentialsForm.Controls.Add($localDCLabel)
 
+	$selectDCButton = New-Object System.Windows.Forms.Button
+	$selectDCButton.Location = New-Object System.Drawing.Point(15,115)
+	$selectDCButton.Size = New-Object System.Drawing.Size(28,28)
+	$selectDCButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$selectDCButton.Text = [char]0x2B1C
 	$selectDCButton.Add_Click({
 		$global:manualDC = $(Choose-SiteCode)[3]
@@ -191,9 +190,9 @@ function GetCredentials() {
 	$CredentialsForm.Controls.Add($cancelButton)
 
 	do {
-		$DomainController = GetLocalDomainController
+		$localDC = GetLocalDomainController
 		
-		if ($DomainController -eq "") {
+		if ($localDC -eq "") {
 			$usernameInput.BackColor = 'White'
 			$passwordInput.BackColor = 'White'
 
@@ -205,19 +204,21 @@ function GetCredentials() {
 		}
 
 		if (!$global:manualDC) {
-			$localDCLabel.Text = $DomainController
+			$localDCLabel.Text = $localDC
 		}
 
 		$action = $CredentialsForm.ShowDialog()
 		if ($action -eq "Cancel") { exit }
 		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
 
-		$validate = TestCredentials -domain $localDCLabel.Text -username $usernameInput.Text -password $passwordInput.Text
-		if (!$validate -and $DomainController) {
-			$usernameInput.Text = ''
-			$passwordInput.Text = ''
-			$usernameInput.BackColor = 'IndianRed'
-			$passwordInput.BackColor = 'IndianRed'
+		if ($localDC) {
+			$validate = TestCredentials -domain $localDCLabel.Text -username $usernameInput.Text -password $passwordInput.Text
+			if (!$validate) {
+				$usernameInput.Text = ''
+				$passwordInput.Text = ''
+				$usernameInput.BackColor = 'IndianRed'
+				$passwordInput.BackColor = 'IndianRed'
+			}
 		}
 	} while (!$validate)
 
