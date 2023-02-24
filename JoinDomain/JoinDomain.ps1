@@ -1490,10 +1490,10 @@ A///AAIACw=='))
 # Get Credentials
 Import-Module .\GetLoginCredentials.psm1
 $LoginCredentials = GetCredentials
-$LocalDC = $LoginCredentials['localDC'].split(".")
-$SiteCode = $LocalDC[0].substring(1, 4)
-$Dom = $LocalDC[1]
-$FullDomNme = $LocalDC[1..3] -join "."
+$DCAddress = $LoginCredentials['DCAddress'].split(".")
+$SiteCode = $DCAddress[0].substring(1, 4)
+$Dom = $DCAddress[1]
+$FullDomNme = $DCAddress[1..3] -join "."
 $username = $LoginCredentials['username']
 $password = $LoginCredentials['password']
 $creds = new-object -typename System.Management.Automation.PSCredential -argumentlist $Dom\$username, (ConvertTo-SecureString $password -AsPlainText -Force)
