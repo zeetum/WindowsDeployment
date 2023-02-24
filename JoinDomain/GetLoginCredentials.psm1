@@ -158,18 +158,15 @@ function GetCredentials() {
 	$localDCLabel.Font = New-Object System.Drawing.Font("Arial",11,[System.Drawing.FontStyle]::Regular)
 	$CredentialsForm.Controls.Add($localDCLabel)
 
-	$global:manualDC = $false
 	$selectDCButton.Text = [char]0x2B1C
 	$selectDCButton.Add_Click({
-		$manualDC = Choose-SiteCode
-		if ($manualDC[3]) {
-			$global:manualDC = $true
-			$localDCLabel.Text = $manualDC[3]
+		$global:manualDC = $(Choose-SiteCode)[3]
+		if ($manualDC) {
+			$localDCLabel.Text = $manualDC
 			$selectDCButton.Text = [char]0x2B1B
 		} else {
 			$localDCLabel.Text = ""
 			$selectDCButton.Text = [char]0x2B1C
-			$global:manualDC = $false
 			$localDCLabel.Text = GetLocalDomainController
 		}
 	})
