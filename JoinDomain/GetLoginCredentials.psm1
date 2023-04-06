@@ -156,7 +156,7 @@ function GetCredentials() {
 	$selectDCButton.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$selectDCButton.Text = [char]0x2B1C
 	$selectDCButton.Add_Click({
-		$global:manualDC = $(Choose-SiteCode)[3]
+		$global:manualDC = $(Choose-SiteCode)[-1]
 		if ($manualDC) {
 			$DCAddress.Text = $manualDC
 			$selectDCButton.Text = [char]0x2B1B
