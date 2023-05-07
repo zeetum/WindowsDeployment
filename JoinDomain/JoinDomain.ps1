@@ -1505,10 +1505,10 @@ $searcher = New-Object System.DirectoryServices.DirectorySearcher($domaininfo)
 $searcher.filter = "(cn=$env:computername)"
 $searchparm = $searcher.FindOne()
 if ($searchparm) {
-	#Computer name exists on domain so join domain with no OU parameter
+	Write-Host "In Domain: Adding to existing location"
 	Add-Computer -DomainName $FullDomNme -Credential $creds -Verbose -Force
 } else {
-	#Computer name not on domain so uses function to choose OU and join domain
+	Write-Host "Not in Domain: Prompting to join"
 	$LocalOU = "OU=School Managed,OU=Computers,OU=E"+$SiteCode+"S01,OU=Schools,DC="+$Dom+",DC=schools,DC=internal"
 	$OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $creds -RootOU $LocalOU
 	Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
