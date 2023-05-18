@@ -1516,4 +1516,6 @@ if ($searchparm) {
 
 Set-TimeZone -Name "W. Australia Standard Time"
 
+Pause
+
 #Restart-Computer -Force
