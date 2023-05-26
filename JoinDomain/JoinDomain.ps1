@@ -1513,7 +1513,8 @@ if ($searchparm) {
 	$OU = Choose-ADOrganizationalUnit -HideNewOUFeature -Domain $FullDomNme -Credential $creds -RootOU $LocalOU
 	Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
 }
-Reset-ComputerMachinePassword -Credential $creds -Verbose
+#Reset-ComputerMachinePassword -Credential $creds -Verbose
+#Test-ComputerSecureChannel -Credential $creds -Verbose -Repair
 
 Set-TimeZone -Name "W. Australia Standard Time"
 
