@@ -1514,7 +1514,6 @@ if ($searchparm) {
 	Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
 }
 Reset-ComputerMachinePassword -Credential $creds -Verbose
-echo n | gpupdate /force /wait:-1
 
 Set-TimeZone -Name "W. Australia Standard Time"
 
