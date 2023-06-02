@@ -1514,7 +1514,7 @@ if ($searchparm) {
 	Add-Computer -DomainName $FullDomNme -Credential $creds -OUPath $OU.distinguishedname -Verbose -Force
 }
 
-Test-ComputerSecureChannel -Credential $creds -Verbose -Repair
+#Test-ComputerSecureChannel -Credential $creds -Verbose -Repair
 #Reset-ComputerMachinePassword -Credential $creds -Verbose
 
 Set-TimeZone -Name "W. Australia Standard Time"
