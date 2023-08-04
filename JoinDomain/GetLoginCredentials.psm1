@@ -204,9 +204,9 @@ function GetCredentials() {
 			$DCAddress.Text = $localDC
 		}
 
+		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
 		$action = $CredentialsForm.ShowDialog()
 		if ($action -eq "Cancel") { exit }
-		$CredentialsForm.Add_Shown({$CredentialsForm.Activate(); $usernameInput.focus()})
 
 		if ($localDC) {
 			$validate = TestCredentials -domain $DCAddress.Text -username $usernameInput.Text -password $passwordInput.Text
