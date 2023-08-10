@@ -10,7 +10,7 @@ Priority=Default
 [Default]
 _SMSTSORGNAME=Test Infra
 OSInstall=YES
-OSDComputerName=PC-%SerialNumber%
+OSDComputerName=MDT-%SerialNumber%
 SkipApplications=NO
 SkipAppsOnUpgrade=YES
 SkipBitLocker=YES
