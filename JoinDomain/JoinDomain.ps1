@@ -1489,7 +1489,7 @@ A///AAIACw=='))
 
 # Get Credentials
 Import-Module .\GetLoginCredentials.psm1
-$LoginCredentials = GetCredentials
+$LoginCredentials = GetLoginCredentials
 $DCAddress = $LoginCredentials['DCAddress'].split(".")
 $SiteCode = $DCAddress[0].substring(1, 4)
 $Dom = $DCAddress[1]
