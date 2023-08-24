@@ -100,7 +100,7 @@ function TestCredentials($domain, $username, $password) {
 }
 
 # Returns valid username, password and domain
-function GetCredentials() {
+function GetLoginCredentials() {
 
 	Add-Type -AssemblyName System.Windows.Forms
 	Add-Type -AssemblyName System.Drawing
@@ -222,4 +222,4 @@ function GetCredentials() {
 	return @{'username' = $usernameInput.Text; "password" = $passwordInput.Text; "DCAddress" = $DCAddress.Text}
 }
 
-Export-ModuleMember -Function GetCredentials
+Export-ModuleMember -Function GetLoginCredentials
