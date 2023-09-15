@@ -6,6 +6,8 @@ if ($NICs | Where-Object { $PSItem.NetConnectionID -eq "Ethernet" }) {
     $MACAddress = @($NICs | Where-Object { $PSItem.NetConnectionID -like "Ethernet" })[0].MACAddress.Replace(':','')
 } elseif ($NICs | Where-Object { $PSItem.NetConnectionID -eq "WiFi" }) {
     $MACAddress = @($NICs | Where-Object { $PSItem.NetConnectionID -like "WiFi" })[0].MACAddress.Replace(':','')
+} elseif ($NICs | Where-Object { $PSItem.NetConnectionID -eq "Wi-Fi" }) {
+    $MACAddress = @($NICs | Where-Object { $PSItem.NetConnectionID -like "Wi-Fi" })[0].MACAddress.Replace(':','')
 }
 
 if ($MACAddress) {
