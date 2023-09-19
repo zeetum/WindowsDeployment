@@ -111,7 +111,7 @@ function GetLoginCredentials() {
 	$CredentialsForm.FormBorderStyle = 'FixedDialog'
 
 	$usernameLabel = New-Object System.Windows.Forms.label
-	$usernameLabel.Location = New-Object System.Drawing.Size(7,12)
+	$usernameLabel.Location = New-Object System.Drawing.Size(10,12)
 	$usernameLabel.width = 100
 	$usernameLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$usernameLabel.Text = "Username"
@@ -124,7 +124,7 @@ function GetLoginCredentials() {
 	$CredentialsForm.Controls.Add($usernameInput)
 
 	$passwordLabel = New-Object System.Windows.Forms.label
-	$passwordLabel.Location = New-Object System.Drawing.Size(7,52)
+	$passwordLabel.Location = New-Object System.Drawing.Size(10,52)
 	$passwordLabel.width = 100
 	$passwordLabel.Font = New-Object System.Drawing.Font("Arial",14,[System.Drawing.FontStyle]::Regular)
 	$passwordLabel.Text = "Password"
