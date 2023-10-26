@@ -1,7 +1,7 @@
 # Returns the selected site code
 function Choose-SiteCode() {
 	$domColour = "indigo"
-	$SiteCodes = @('5008','5167','5070')
+	$SiteCodes = @('5008','5477','5167','5070')
 	$len = $SiteCodes.length
 
 	Add-Type -AssemblyName System.Windows.Forms
